@@ -26,6 +26,7 @@ class Ticket extends Entry {
     isFinished = map['isFinished'] as bool;
   }
 
+  @override
   int get id {
     return _id;
   }
