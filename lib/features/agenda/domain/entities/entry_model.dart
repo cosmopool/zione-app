@@ -1,5 +1,4 @@
-part of 'agenda_entry_model.dart';
-
 abstract class Entry {
   Map toMap();
+  void edit(Map map);
 }

@@ -1,4 +1,4 @@
-import 'package:zione_app/features/agenda/models/entry_model.dart';
+import 'package:zione/features/agenda/domain/entities/entry_model.dart';
 
 class Ticket extends Entry {
   int _id = -1;
@@ -45,6 +45,7 @@ class Ticket extends Entry {
     return ticketToMap;
   }
 
+  @override
   void edit(Map map) {
     map['clientName'] = clientName;
     map['clientPhone'] = clientPhone;

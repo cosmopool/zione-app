@@ -1,18 +1,17 @@
-part 'entry_model.dart';
+import 'package:zione/features/agenda/domain/entities/entry_model.dart';
 
 class AgendaEntry extends Entry {
-  int? id;
-  late String clientName;
-  late String clientPhone;
-  late String clientAddress;
-  late String serviceType;
-  late String description;
-  late String date;
-  late String time;
-  late String duration;
-  late int appointmentId;
-  late int ticketId;
-  late bool appointmentIsFinished;
+  int id = -1;
+  String clientName = "not initialized variable";
+  String clientPhone = "not initialized variable";
+  String clientAddress = "not initialized variable";
+  String serviceType = "not initialized variable";
+  String description = "not initialized variable";
+  String date = "not initialized variable";
+  String time = "not initialized variable";
+  String duration = "not initialized variable";
+  int ticketId = -1;
+  bool appointmentIsFinished = false;
 
   AgendaEntry(Map<String, dynamic> response) {
     id = response['id'] as int;
@@ -33,23 +32,33 @@ class AgendaEntry extends Entry {
 
   @override
   Map toMap() {
-    Map agendaEntry = {};
+    Map map = {};
 
-    if (agendaEntry['id'] != null) {
-      agendaEntry['id'] = id;
-    }
-    if (agendaEntry['ticketId'] != null) {
-      agendaEntry['ticketId'] = ticketId;
-    }
-    agendaEntry['clientName'] = clientName;
-    agendaEntry['clientPhone'] = clientPhone;
-    agendaEntry['clientAddress'] = clientAddress;
-    agendaEntry['serviceType'] = serviceType;
-    agendaEntry['description'] = description;
-    agendaEntry['date'] = date;
-    agendaEntry['time'] = time;
-    agendaEntry['duration'] = duration;
+    if (map['id'] != null) map['id'] = id;
+    if (map['ticketId'] != null) map['ticketId'] = ticketId;
+    map['clientName'] = clientName;
+    map['clientPhone'] = clientPhone;
+    map['clientAddress'] = clientAddress;
+    map['serviceType'] = serviceType;
+    map['description'] = description;
+    map['date'] = date;
+    map['time'] = time;
+    map['duration'] = duration;
 
-    return agendaEntry;
+    return map;
+  }
+
+  @override
+  void edit(Map map) {
+    map['clientName'] = clientName;
+    map['clientPhone'] = clientPhone;
+    map['clientAddress'] = clientAddress;
+    map['serviceType'] = serviceType;
+    map['description'] = description;
+    map['date'] = date;
+    map['time'] = time;
+    map['duration'] = duration;
+    map['ticketId'] = ticketId;
+    map['appointmentIsFinished'] = appointmentIsFinished;
   }
 }
