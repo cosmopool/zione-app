@@ -8,7 +8,7 @@ import 'package:zione/features/agenda/domain/entities/entry_card_model.dart';
 
 class FeedProvider extends ChangeNotifier with FeedUseCases {
   FeedProvider({required this.feedRepository, required this.cardConstructor, required this.endpoint});
-  final FeedRepository feedRepository;
+  final FeedRepositoryInterface feedRepository;
   final cardConstructor;
   final Endpoint endpoint;
 
@@ -26,9 +26,9 @@ class FeedProvider extends ChangeNotifier with FeedUseCases {
   }
 
   @override
-  void deleteCard(EntryCard entryCard) {
+  void deleteCard(int cardId) {
     _feed.forEach((card) {
-      if (card.id == entryCard.id) _feed.remove(card);
+      if (card.id == cardId) _feed.remove(card);
     });
     notifyListeners();
   }

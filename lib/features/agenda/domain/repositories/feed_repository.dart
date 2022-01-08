@@ -1,5 +1,5 @@
 import 'package:zione/utils/enums.dart';
 
-abstract class FeedRepository {
+abstract class FeedRepositoryInterface {
   void fetch(Endpoint endpoint);
 }
