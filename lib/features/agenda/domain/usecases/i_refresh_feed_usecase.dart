@@ -1,8 +1,9 @@
 import 'package:zione/features/agenda/domain/repositories/i_refresh_feed_repository.dart';
+import 'package:zione/features/agenda/infra/datasources/i_response_api_request.dart';
 import 'package:zione/utils/enums.dart';
 
 abstract class IRefreshFeedUsecase {
-  Future<bool> call(Endpoint endpoint);
+  Future<IResponse> call(Endpoint endpoint);
 }
 
 class RefreshFeedUsecase extends IRefreshFeedUsecase {
@@ -11,7 +12,7 @@ class RefreshFeedUsecase extends IRefreshFeedUsecase {
   RefreshFeedUsecase(this._repository);
 
   @override
-  Future<bool> call(Endpoint endpoint) async {
+  Future<IResponse> call(Endpoint endpoint) async {
     final result = await _repository(endpoint);
     return result;
   }

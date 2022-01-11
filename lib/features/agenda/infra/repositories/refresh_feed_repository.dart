@@ -9,13 +9,10 @@ class RefreshFeedRepository implements IRefreshFeedRepository {
   RefreshFeedRepository(this._datasource);
 
   @override
-  Future<bool> call(Endpoint endpoint) async {
-    bool result = false;
-
+  Future<IResponse> call(Endpoint endpoint) async {
     // TODO: check if it will request cache or rest api
     final IResponse response = await _datasource(endpoint);
-    (response.status == ResponseStatus.success) ? result = true : result = false;
 
-    return result;
+    return response;
   }
 }
