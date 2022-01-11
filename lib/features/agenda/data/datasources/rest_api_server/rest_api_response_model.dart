@@ -20,6 +20,11 @@ class Response implements IResponse {
     if (json['Result'] != null) result = json['Result'];
   }
 
+  Response.noConnection(){
+    status = ResponseStatus.err;
+    result = "No connection with remote server";
+  }
+
   List resultToList() {
     if (status == ResponseStatus.success) {
       return jsonDecode(result);
