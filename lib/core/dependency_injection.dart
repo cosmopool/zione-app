@@ -28,30 +28,30 @@ import 'package:zione/features/agenda/infra/repositories/refresh_feed_repository
 
 class DependencyInjection {
   static void init() {
-  GetIt getIt = GetIt.instance;
+    GetIt getIt = GetIt.instance;
 
-  // servers
-  getIt.registerSingleton<ApiServerDataSource>(ApiServerDataSource());
+    // servers
+    getIt.registerSingleton<ApiServerDataSource>(ApiServerDataSource());
 
-  // datasources
-  getIt.registerLazySingleton<ICloseCardDataSouce>(() => CloseCardDataSource(getIt()));
-  getIt.registerLazySingleton<IInsertCardDataSource>(() => InsertCardDataSource(getIt()));
-  getIt.registerLazySingleton<IEditCardDataSouce>(() => EditCardDataSource(getIt()));
-  getIt.registerLazySingleton<IDeleteCardDataSouce>(() => DeleteCardDataSource(getIt()));
-  getIt.registerLazySingleton<IRefreshFeedDataSouce>(() => RefreshFeedDataSource(getIt()));
+    // datasources
+    getIt.registerLazySingleton<ICloseCardDataSouce>(() => CloseCardDataSource(getIt()));
+    getIt.registerLazySingleton<IInsertCardDataSource>(() => InsertCardDataSource(getIt()));
+    getIt.registerLazySingleton<IEditCardDataSouce>(() => EditCardDataSource(getIt()));
+    getIt.registerLazySingleton<IDeleteCardDataSouce>(() => DeleteCardDataSource(getIt()));
+    getIt.registerLazySingleton<IRefreshFeedDataSouce>(() => RefreshFeedDataSource(getIt()));
 
-  // repositories
-  getIt.registerLazySingleton<ICloseCardRepository>(() => CloseCardRepository(getIt()));
-  getIt.registerLazySingleton<IInsertCardRepository>(() => InsertCardRepository(getIt()));
-  getIt.registerLazySingleton<IEditCardRepository>(() => EditCardRepository(getIt()));
-  getIt.registerLazySingleton<IDeleteCardRepository>(() => DeleteCardRepository(getIt()));
-  getIt.registerLazySingleton<IRefreshFeedRepository>(() => RefreshFeedRepository(getIt()));
+    // repositories
+    getIt.registerLazySingleton<ICloseCardRepository>(() => CloseCardRepository(getIt()));
+    getIt.registerLazySingleton<IInsertCardRepository>(() => InsertCardRepository(getIt()));
+    getIt.registerLazySingleton<IEditCardRepository>(() => EditCardRepository(getIt()));
+    getIt.registerLazySingleton<IDeleteCardRepository>(() => DeleteCardRepository(getIt()));
+    getIt.registerLazySingleton<IRefreshFeedRepository>(() => RefreshFeedRepository(getIt()));
 
-  // usecases
-  getIt.registerLazySingleton<ICloseCardUsecase>(() => CloseCardUsecase(getIt()));
-  getIt.registerLazySingleton<IInsertCardUseCase>(() => InsertCardUseCase(getIt()));
-  getIt.registerLazySingleton<IEditCardUsecase>(() => EditCardUsecase(getIt()));
-  getIt.registerLazySingleton<IDeleteCardUseCase>(() => DeleteCardUseCase(getIt()));
-  getIt.registerLazySingleton<IRefreshFeedUsecase>(() => RefreshFeedUsecase(getIt()));
+    // usecases
+    getIt.registerLazySingleton<ICloseCardUsecase>(() => CloseCardUsecase(getIt()));
+    getIt.registerLazySingleton<IInsertCardUseCase>(() => InsertCardUseCase(getIt()));
+    getIt.registerLazySingleton<IEditCardUsecase>(() => EditCardUsecase(getIt()));
+    getIt.registerLazySingleton<IDeleteCardUseCase>(() => DeleteCardUseCase(getIt()));
+    getIt.registerLazySingleton<IRefreshFeedUsecase>(() => RefreshFeedUsecase(getIt()));
   }
 }
