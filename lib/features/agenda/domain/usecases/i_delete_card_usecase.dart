@@ -1,5 +1,6 @@
-import 'package:zione/utils/enums.dart';
 import 'package:zione/features/agenda/domain/entities/entry_entity.dart';
+import 'package:zione/features/agenda/domain/repositories/i_delete_card_repository.dart';
+import 'package:zione/utils/enums.dart';
 
 abstract class IDeleteCardUseCase {
   Future<bool> call(EntryEntity entry, Endpoint endpoint);
@@ -8,11 +9,11 @@ abstract class IDeleteCardUseCase {
 class DeleteCardUseCase extends IDeleteCardUseCase {
   final IDeleteCardRepository _repository;
 
-  DeleteCardUseCase({required repository}) : _repository = repository;
+  DeleteCardUseCase(this._repository);
 
   @override
-  Future<bool> call(EntryEntity entry, Endpoint endpoint) {
-    // TODO: implement call
-    throw UnimplementedError();
+  Future<bool> call(EntryEntity entry, Endpoint endpoint) async {
+    final result = await _repository(entry, endpoint);
+    return result;
   }
 }

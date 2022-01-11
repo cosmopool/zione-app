@@ -7,8 +7,9 @@ abstract class IInsertCardUseCase {
 }
 
 class InsertCardUseCase extends IInsertCardUseCase {
-  InsertCardUseCase({required repository}) : _repository = repository;
   final IInsertCardRepository _repository;
+
+  InsertCardUseCase(this._repository);
 
   @override
   Future<bool> call(EntryEntity entry, Endpoint endpoint) async {
