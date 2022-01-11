@@ -1,12 +1,12 @@
-import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+import 'package:http/http.dart' as http;
 import 'package:zione/core/auth.dart' as auth_config;
+import 'package:zione/features/agenda/data/datasources/rest_api_server/rest_api_response_model.dart';
 import 'package:zione/utils/constants.dart' as conf;
 import 'package:zione/utils/enums.dart';
-import 'package:zione/features/agenda/data/models/rest_api_response_model.dart';
 
-class ApiRequests {
+class RestApiServerDataSource {
   final Map<String, String> _headers = {
     'Content-type': 'application/json',
     'Accept': 'application/json',
@@ -37,6 +37,7 @@ class ApiRequests {
     return endpointStr;
   }
 
+  @override
   Future<Response> fetchContentFromServer(Endpoint endpoint) async {
     // fetch content from rest api
     Map result;
@@ -50,6 +51,7 @@ class ApiRequests {
     return Response(result);
   }
 
+  @override
   Future<Response> postContentToServer(Endpoint endpoint, Map content) async {
     // post content to rest api
     Map result;
@@ -63,6 +65,7 @@ class ApiRequests {
     return Response(result);
   }
 
+  @override
   Future<Response> updateContentFromServer(
       Endpoint endpoint, Map content) async {
     // close content from rest api
@@ -80,6 +83,7 @@ class ApiRequests {
     return Response(result);
   }
 
+  @override
   Future<Response> closeContentFromServer(
       Endpoint endpoint, Map content) async {
     // close content from rest api
@@ -97,6 +101,7 @@ class ApiRequests {
     return Response(result);
   }
 
+  @override
   Future<Response> deleteContentFromServer(
       Endpoint endpoint, Map content) async {
     // delete content from rest api
