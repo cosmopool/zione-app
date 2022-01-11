@@ -4,35 +4,35 @@ import 'package:zione/utils/enums.dart';
 import 'package:zione/features/agenda/data/models/rest_api_response_model.dart';
 
 void main() {
-  test('Successful valid response', () {
+  test('Status should return success given valid response', () {
     const Map json = {"Status":"Success", "Result":"Success message from server."};
     final response = Response(json);
 
     expect(response.status, equals(ResponseStatus.success));
   });
 
-  test('Unsuccessful valid response', () {
+  test('Status should return error given valid response', () {
     const Map json = {"Status":"Error", "Result":"Success message from server."};
     final response = Response(json);
 
     expect(response.status, equals(ResponseStatus.err));
   });
 
-  test('Invalid response', () {
+  test('Status should return error given invalid response', () {
     const Map json = {"msg": "Invalid message from server."};
     final response = Response(json);
 
     expect(response.status, equals(ResponseStatus.err));
   });
 
-  test('Result is a single map', () {
+  test('Result should return single map given invalid response', () {
     const Map json = {"Status":"Success", "Result":{"id": 1}};
     final response = Response(json);
 
     expect(response.result["id"], equals(1));
   });
 
-  test('Result is a list of maps', () {
+  test('Result should return list of maps given invalid response', () {
     const Map json = {"Status":"Success", "Result":[{"id": 1}, {"id": 2}]};
     final response = Response(json);
 
