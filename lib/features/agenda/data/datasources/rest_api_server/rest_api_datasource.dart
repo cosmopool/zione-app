@@ -6,7 +6,7 @@ import 'package:zione/features/agenda/data/datasources/rest_api_server/rest_api_
 import 'package:zione/utils/constants.dart' as conf;
 import 'package:zione/utils/enums.dart';
 
-class RestApiServerDataSource {
+class ApiServerDataSource {
   final Map<String, String> _headers = {
     'Content-type': 'application/json',
     'Accept': 'application/json',
@@ -37,7 +37,6 @@ class RestApiServerDataSource {
     return endpointStr;
   }
 
-  @override
   Future<Response> fetchContentFromServer(Endpoint endpoint) async {
     // fetch content from rest api
     Map result;
@@ -51,7 +50,6 @@ class RestApiServerDataSource {
     return Response(result);
   }
 
-  @override
   Future<Response> postContentToServer(Endpoint endpoint, Map content) async {
     // post content to rest api
     Map result;
@@ -65,7 +63,6 @@ class RestApiServerDataSource {
     return Response(result);
   }
 
-  @override
   Future<Response> updateContentFromServer(
       Endpoint endpoint, Map content) async {
     // close content from rest api
@@ -83,7 +80,6 @@ class RestApiServerDataSource {
     return Response(result);
   }
 
-  @override
   Future<Response> closeContentFromServer(
       Endpoint endpoint, Map content) async {
     // close content from rest api
@@ -101,7 +97,6 @@ class RestApiServerDataSource {
     return Response(result);
   }
 
-  @override
   Future<Response> deleteContentFromServer(
       Endpoint endpoint, Map content) async {
     // delete content from rest api
