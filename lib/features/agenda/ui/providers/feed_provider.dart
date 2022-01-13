@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get_it/get_it.dart';
-
 import 'package:zione/features/agenda/domain/entities/agenda_entry_entity.dart';
 import 'package:zione/features/agenda/domain/entities/appointment_entity.dart';
 import 'package:zione/features/agenda/domain/entities/entry_entity.dart';
@@ -12,27 +10,59 @@ import 'package:zione/features/agenda/domain/usecases/i_refresh_feed_usecase.dar
 import 'package:zione/features/agenda/infra/datasources/i_response_api_request.dart';
 import 'package:zione/utils/enums.dart';
 
-class FeedProvider extends ChangeNotifier {
-  final IInsertCardUseCase _insert = GetIt.instance.get<InsertCardUseCase>();
-  final ICloseCardUsecase _close = GetIt.instance.get<CloseCardUsecase>();
-  final IDeleteCardUseCase _delete = GetIt.instance.get<DeleteCardUseCase>();
-  final IRefreshFeedUsecase _refresh = GetIt.instance.get<RefreshFeedUsecase>();
+abstract class IFeedProvider {
+  int get cardExpandedId;
+  bool get result;
+  bool get isLoading;
+  List<TicketEntity> get ticketFeed;
+  List get agendaEntryFeed;
+  List<AppointmentEntity> get appointmentFeed;
+  Map get ticketFeedByDate;
+  Map get agendaEntryFeedByDate;
+  void _populateFeed(IResponse response, Endpoint endpoint);
+  void _indexEntryByDate(entry, map);
+  void refresh(Endpoint endpoint);
+  void delete(EntryEntity entry, Endpoint endpoint);
+  void insert(EntryEntity entry, Endpoint endpoint);
+  void close(EntryEntity entry, Endpoint endpoint);
+}
+
+class FeedProvider extends ChangeNotifier with IFeedProvider {
+  final IInsertCardUseCase _insert;
+  final ICloseCardUsecase _close;
+  final IDeleteCardUseCase _delete;
+  final IRefreshFeedUsecase _refresh;
 
   int _cardExpandedId = 0;
   List<TicketEntity> _ticketFeed = [];
-  List<AgendaEntryEntity> _agendaEntryFeed = [];
+  final List _agendaEntryFeed = [];
   List<AppointmentEntity> _appointmentFeed = [];
   Map _ticketFeedIndexedByDate = {};
   Map _agendaFeedIndexedByDate = {};
   Map _appointmentFeedIndexedByDate = {};
   bool _result = false;
+  bool _isLoading = false;
 
+  FeedProvider(this._insert, this._close, this._delete, this._refresh);
+
+  @override
   int get cardExpandedId => _cardExpandedId;
+  @override
   bool get result => _result;
+  @override
+  bool get isLoading => _isLoading;
+  @override
   List<TicketEntity> get ticketFeed => _ticketFeed;
-  List<AgendaEntryEntity> get agendaEntryFeed => _agendaEntryFeed;
+  @override
+  List get agendaEntryFeed => _agendaEntryFeed;
+  @override
   List<AppointmentEntity> get appointmentFeed => _appointmentFeed;
+  @override
+  Map get ticketFeedByDate => _ticketFeedIndexedByDate;
+  @override
+  Map get agendaEntryFeedByDate => _agendaFeedIndexedByDate;
 
+  @override
   void _populateFeed(IResponse response, Endpoint endpoint) {
     if (response.status == ResponseStatus.success) {
       switch (endpoint) {
@@ -55,10 +85,10 @@ class FeedProvider extends ChangeNotifier {
           break;
         case Endpoint.agenda:
           {
-            response.result.forEach((entry, key) {
+            response.result.forEach((entry) {
               final _entry = AgendaEntryEntity(entry);
               _agendaEntryFeed.add(_entry);
-              _indexEntryByDate(entry, _agendaFeedIndexedByDate);
+              _indexEntryByDate(_entry, _agendaFeedIndexedByDate);
             });
           }
           break;
@@ -66,6 +96,7 @@ class FeedProvider extends ChangeNotifier {
     }
   }
 
+  @override
   void _indexEntryByDate(entry, map) {
     final date = entry.date;
 
@@ -76,24 +107,28 @@ class FeedProvider extends ChangeNotifier {
     map[date].add(entry);
   }
 
+  @override
   void refresh(Endpoint endpoint) async {
     final IResponse response = await _refresh(endpoint);
     _populateFeed(response, endpoint);
     notifyListeners();
   }
 
+  @override
   void delete(EntryEntity entry, Endpoint endpoint) async {
     _result = await _delete(entry, endpoint);
     result ? refresh(endpoint) : null;
     notifyListeners();
   }
 
+  @override
   void insert(EntryEntity entry, Endpoint endpoint) async {
     _result = await _insert(entry, endpoint);
     result ? refresh(endpoint) : null;
     notifyListeners();
   }
 
+  @override
   void close(EntryEntity entry, Endpoint endpoint) async {
     _result = await _close(entry, endpoint);
     result ? refresh(endpoint) : null;

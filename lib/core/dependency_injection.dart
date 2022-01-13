@@ -26,7 +26,7 @@ import 'package:zione/features/agenda/infra/repositories/edit_card_repository.da
 import 'package:zione/features/agenda/infra/repositories/insert_card_repository.dart';
 import 'package:zione/features/agenda/infra/repositories/refresh_feed_repository.dart';
 
-class DependencyInjection {
+class Inject {
   static void init() {
     GetIt getIt = GetIt.instance;
 
