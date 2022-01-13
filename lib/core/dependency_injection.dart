@@ -25,6 +25,7 @@ import 'package:zione/features/agenda/infra/repositories/delete_card_repository.
 import 'package:zione/features/agenda/infra/repositories/edit_card_repository.dart';
 import 'package:zione/features/agenda/infra/repositories/insert_card_repository.dart';
 import 'package:zione/features/agenda/infra/repositories/refresh_feed_repository.dart';
+import 'package:zione/features/agenda/ui/providers/feed_provider.dart';
 
 class Inject {
   static void init() {
@@ -53,5 +54,9 @@ class Inject {
     getIt.registerLazySingleton<IEditCardUsecase>(() => EditCardUsecase(getIt()));
     getIt.registerLazySingleton<IDeleteCardUseCase>(() => DeleteCardUseCase(getIt()));
     getIt.registerLazySingleton<IRefreshFeedUsecase>(() => RefreshFeedUsecase(getIt()));
+
+    // feed
+    getIt.registerLazySingleton<IFeedProvider>(() => FeedProvider(getIt(), getIt(), getIt(), getIt(), getIt()));
+    getIt.registerLazySingleton<FeedProvider>(() => FeedProvider(getIt(), getIt(), getIt(), getIt(), getIt()));
   }
 }
