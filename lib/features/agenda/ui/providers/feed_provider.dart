@@ -5,6 +5,7 @@ import 'package:zione/features/agenda/domain/entities/entry_entity.dart';
 import 'package:zione/features/agenda/domain/entities/ticket_entity.dart';
 import 'package:zione/features/agenda/domain/usecases/i_close_card_usecase.dart';
 import 'package:zione/features/agenda/domain/usecases/i_delete_card_usecase.dart';
+import 'package:zione/features/agenda/domain/usecases/i_edit_card_usecase.dart';
 import 'package:zione/features/agenda/domain/usecases/i_insert_card_usecase.dart';
 import 'package:zione/features/agenda/domain/usecases/i_refresh_feed_usecase.dart';
 import 'package:zione/features/agenda/infra/datasources/i_response_api_request.dart';
@@ -15,7 +16,7 @@ abstract class IFeedProvider {
   bool get result;
   bool get isLoading;
   List<TicketEntity> get ticketFeed;
-  List get agendaEntryFeed;
+  List<AgendaEntryEntity> get agendaEntryFeed;
   List<AppointmentEntity> get appointmentFeed;
   Map get ticketFeedByDate;
   Map get agendaEntryFeedByDate;
@@ -25,6 +26,7 @@ abstract class IFeedProvider {
   void delete(EntryEntity entry, Endpoint endpoint);
   void insert(EntryEntity entry, Endpoint endpoint);
   void close(EntryEntity entry, Endpoint endpoint);
+  void edit(EntryEntity entry, Endpoint endpoint);
 }
 
 class FeedProvider extends ChangeNotifier with IFeedProvider {
@@ -32,10 +34,11 @@ class FeedProvider extends ChangeNotifier with IFeedProvider {
   final ICloseCardUsecase _close;
   final IDeleteCardUseCase _delete;
   final IRefreshFeedUsecase _refresh;
+  final IEditCardUsecase _edit;
 
   int _cardExpandedId = 0;
   List<TicketEntity> _ticketFeed = [];
-  final List _agendaEntryFeed = [];
+  List<AgendaEntryEntity> _agendaEntryFeed = [];
   List<AppointmentEntity> _appointmentFeed = [];
   Map _ticketFeedIndexedByDate = {};
   Map _agendaFeedIndexedByDate = {};
@@ -43,7 +46,7 @@ class FeedProvider extends ChangeNotifier with IFeedProvider {
   bool _result = false;
   bool _isLoading = false;
 
-  FeedProvider(this._insert, this._close, this._delete, this._refresh);
+  FeedProvider(this._insert, this._close, this._edit, this._delete, this._refresh);
 
   @override
   int get cardExpandedId => _cardExpandedId;
@@ -54,7 +57,7 @@ class FeedProvider extends ChangeNotifier with IFeedProvider {
   @override
   List<TicketEntity> get ticketFeed => _ticketFeed;
   @override
-  List get agendaEntryFeed => _agendaEntryFeed;
+  List<AgendaEntryEntity> get agendaEntryFeed => _agendaEntryFeed;
   @override
   List<AppointmentEntity> get appointmentFeed => _appointmentFeed;
   @override
@@ -116,6 +119,7 @@ class FeedProvider extends ChangeNotifier with IFeedProvider {
 
   @override
   void delete(EntryEntity entry, Endpoint endpoint) async {
+    _result = false;
     _result = await _delete(entry, endpoint);
     result ? refresh(endpoint) : null;
     notifyListeners();
@@ -123,13 +127,23 @@ class FeedProvider extends ChangeNotifier with IFeedProvider {
 
   @override
   void insert(EntryEntity entry, Endpoint endpoint) async {
+    _result = false;
     _result = await _insert(entry, endpoint);
     result ? refresh(endpoint) : null;
     notifyListeners();
   }
 
   @override
+  void edit(EntryEntity entry, Endpoint endpoint) async {
+    _result = false;
+    _result = await _edit(entry, endpoint);
+    result ? refresh(endpoint) : null;
+    notifyListeners();
+  }
+
+  @override
   void close(EntryEntity entry, Endpoint endpoint) async {
+    _result = false;
     _result = await _close(entry, endpoint);
     result ? refresh(endpoint) : null;
     notifyListeners();
