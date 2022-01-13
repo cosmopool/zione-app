@@ -1,1 +1,3 @@
-var token = '';
+// var token = '';
+const token =
+    "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTY0MjAxMzI5NSwianRpIjoiZGI0NWRlZjYtMGVlZC00Y2RlLTlkODItYjU4MjcyYmEyZjIzIiwidHlwZSI6ImFjY2VzcyIsInN1YiI6ImthaW8iLCJuYmYiOjE2NDIwMTMyOTV9.MG33xzu4grkBRGW1AAZmDocEQkKKVk6YcjbFvC74V7I";
