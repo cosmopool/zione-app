@@ -66,12 +66,13 @@ class FeedProvider extends ChangeNotifier with IFeedProvider {
   Map get agendaEntryFeedByDate => _agendaFeedIndexedByDate;
 
   @override
-  void _populateFeed(IResponse response, Endpoint endpoint) {
+  void _populateFeed(IResponse response, Endpoint endpoint) async {
     if (response.status == ResponseStatus.success) {
       switch (endpoint) {
         case Endpoint.tickets:
           {
-            response.result.forEach((entry, key) {
+            _ticketFeed = [];
+            response.result.forEach((entry) {
               final _entry = TicketEntity(entry);
               _ticketFeed.add(_entry);
             });
@@ -79,7 +80,8 @@ class FeedProvider extends ChangeNotifier with IFeedProvider {
           break;
         case Endpoint.appointments:
           {
-            response.result.forEach((entry, key) {
+            _appointmentFeed = [];
+            response.result.forEach((entry) {
               final _entry = AppointmentEntity(entry);
               _appointmentFeed.add(_entry);
               _indexEntryByDate(entry, _appointmentFeedIndexedByDate);
@@ -88,6 +90,7 @@ class FeedProvider extends ChangeNotifier with IFeedProvider {
           break;
         case Endpoint.agenda:
           {
+            _agendaEntryFeed = [];
             response.result.forEach((entry) {
               final _entry = AgendaEntryEntity(entry);
               _agendaEntryFeed.add(_entry);
