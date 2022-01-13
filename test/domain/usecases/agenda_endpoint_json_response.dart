@@ -1,4 +1,4 @@
-const Map<String, dynamic> responseMap = {
+const Map<String, dynamic> responseForTests = {
     "Status": "Success",
     "Result": [
         {
