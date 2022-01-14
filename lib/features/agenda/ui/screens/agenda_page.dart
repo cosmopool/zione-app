@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:zione/features/agenda/ui/providers/feed_provider.dart';
-import 'package:zione/features/agenda/ui/screens/tickets_page.dart';
 import 'package:zione/features/agenda/ui/widgets/entry_feed/appointments_feed.dart';
+import 'package:zione/features/agenda/ui/widgets/entry_feed/ticket_feed.dart';
 import 'package:zione/utils/enums.dart';
 
 class AgendaPage extends StatefulWidget {
