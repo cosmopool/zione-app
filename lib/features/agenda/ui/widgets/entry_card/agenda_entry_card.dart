@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:zione/features/agenda/domain/entities/agenda_entry_entity.dart';
+import 'package:zione/features/agenda/ui/widgets/bottom_modal/bottom_modal.dart';
+import 'package:zione/utils/enums.dart';
 
+import 'components/card_menu.dart';
 import 'components/divider_theme.dart';
 import 'components/url_launcher.dart' as launcher;
 
@@ -42,9 +45,8 @@ class _EntryCardState extends State<AgendaEntryCard> {
                 trailing: expanded
                     ? IconButton(
                         icon: const Icon(FontAwesomeIcons.ellipsisV),
-                        onPressed: ()=>{},
-                        // onPressed: () => showBottomAutoSizeModal(context,
-                        //     CardMenu("agendamento", null, widget.entry)),
+                        onPressed: () => showBottomAutoSizeModal(context,
+                            CardMenu(widget.entry, Endpoint.appointments)),
                       )
                     : null,
                 onTap: () {

@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:zione/features/agenda/domain/entities/ticket_entity.dart';
+import 'package:zione/features/agenda/ui/widgets/bottom_modal/bottom_modal.dart';
 import 'package:zione/features/agenda/ui/widgets/entry_card/components/divider_theme.dart';
 import 'package:zione/features/agenda/ui/widgets/entry_card/components/url_launcher.dart' as launcher;
+import 'package:zione/utils/enums.dart';
+
+import 'components/card_menu.dart';
 
 class TicketCard extends StatefulWidget {
   final TicketEntity ticket;
@@ -41,9 +45,9 @@ class _TicketCardState extends State<TicketCard> {
                 trailing: _expanded
                     ? IconButton(
                         icon: const Icon(FontAwesomeIcons.ellipsisV),
-                        onPressed: () => {},
-                        // onPressed: () => showBottomAutoSizeModal(
-                        //     context, CardMenu("chamado", widget.ticket, null)),
+                        // onPressed: () => {},
+                        onPressed: () => showBottomAutoSizeModal(
+                            context, CardMenu(widget.ticket, Endpoint.tickets)),
                       )
                     : null,
                 onTap: () {
