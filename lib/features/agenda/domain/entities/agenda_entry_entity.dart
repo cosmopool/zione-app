@@ -1,6 +1,8 @@
 import 'package:zione/features/agenda/domain/entities/entry_entity.dart';
+import 'package:zione/utils/enums.dart';
 
 class AgendaEntryEntity extends EntryEntity {
+  final Entry _type = Entry.ticket;
   int _id = -1;
   String clientName = "not initialized variable";
   String clientPhone = "not initialized variable";
@@ -34,6 +36,9 @@ class AgendaEntryEntity extends EntryEntity {
 
   @override
   int get id => _id;
+
+  @override
+  Entry get type => _type;
 
   @override
   Map toMap() {
