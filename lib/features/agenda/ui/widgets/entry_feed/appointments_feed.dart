@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:zione/features/agenda/domain/entities/agenda_entry_entity.dart';
 import 'package:zione/features/agenda/ui/providers/feed_provider.dart';
 import 'package:zione/features/agenda/ui/widgets/entry_card/agenda_entry_card.dart';
+import 'package:zione/features/agenda/ui/widgets/feed_section/feed_section.dart';
 import 'package:zione/utils/enums.dart';
 
 class AppointmentsFeed extends StatefulWidget {
@@ -12,8 +14,8 @@ class AppointmentsFeed extends StatefulWidget {
 }
 
 class _AppointmentsFeedState extends State<AppointmentsFeed> {
-  late List _contentList;
   late bool _isLoading;
+  late Map _entriesByDate;
 
   @override
   void initState() {
@@ -23,17 +25,26 @@ class _AppointmentsFeedState extends State<AppointmentsFeed> {
 
   @override
   Widget build(BuildContext context) {
-    _contentList = context.watch<FeedProvider>().agendaEntryFeed;
+    _entriesByDate = context.watch<FeedProvider>().agendaEntryFeedByDate;
     _isLoading = context.watch<FeedProvider>().isLoading;
+    final dates = _entriesByDate.keys.toList();
+
+    AgendaEntryEntity classInstantiator(entryMap) => AgendaEntryEntity(entryMap);
+    Widget cardInstantiator(entry) => AgendaEntryCard(entry: entry);
 
     return _isLoading
         ? const Center(child: CircularProgressIndicator())
         : ListView.builder(
-            itemCount: _contentList.length,
+            itemCount: dates.length,
             itemBuilder: (context, index) {
-              return AgendaEntryCard(entry: _contentList[index]);
+              final date = dates[index];
+              return FeedSection(
+                date: date,
+                entries: _entriesByDate[date],
+                classInstantiator: classInstantiator,
+                cardInstantiator: cardInstantiator,
+              );
             },
           );
   }
 }
-
