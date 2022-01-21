@@ -1,5 +1,6 @@
-import 'package:zione/features/agenda/domain/entities/ticket_model.dart';
-import 'package:zione/features/agenda/domain/entities/appointment_model.dart';
+import 'package:zione/features/agenda/infra/datasources/i_response_api_request.dart';
 
-List<Ticket> listOfTickets = [];
-List<Appointment> listOfAppointments = [];
+abstract class ICacheDatasource {
+  IResponse saveContent(List listOfContent);
+  IResponse fetchContent();
+}
