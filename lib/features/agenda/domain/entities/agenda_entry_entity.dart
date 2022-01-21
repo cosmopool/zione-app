@@ -16,19 +16,19 @@ class AgendaEntryEntity extends EntryEntity {
   bool isFinished = false;
   bool ticketIsFinished = false;
 
-  AgendaEntryEntity(Map<String, dynamic> response) {
-    _id = response['id'] as int;
-    clientName = response['clientName'] as String;
-    clientPhone = response['clientPhone'] as String;
-    clientAddress = response['clientAddress'] as String;
-    serviceType = response['serviceType'] as String;
-    description = response['description'] as String;
-    date = response['date'] as String;
-    time = response['time'] as String;
-    duration = response['duration'] as String;
-    ticketId = response['ticketId'] as int;
-    isFinished = response['isFinished'] as bool;
-    ticketIsFinished = response['ticketIsFinished'] as bool;
+  AgendaEntryEntity(Map<String, dynamic> entryMap) {
+    _id = entryMap['id'] as int;
+    clientName = entryMap['clientName'] as String;
+    clientPhone = entryMap['clientPhone'] as String;
+    clientAddress = entryMap['clientAddress'] as String;
+    serviceType = entryMap['serviceType'] as String;
+    description = entryMap['description'] as String;
+    date = entryMap['date'] as String;
+    time = entryMap['time'] as String;
+    duration = entryMap['duration'] as String;
+    ticketId = entryMap['ticketId'] as int;
+    isFinished = entryMap['isFinished'] as bool;
+    ticketIsFinished = entryMap['ticketIsFinished'] as bool;
 
     time = time.substring(0, 5);
     duration = duration.substring(0, 5);
