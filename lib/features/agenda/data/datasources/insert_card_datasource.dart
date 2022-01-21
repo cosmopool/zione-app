@@ -12,6 +12,6 @@ class InsertCardDataSource implements IInsertCardDataSource  {
   @override
   Future<IResponse> call(EntryEntity entry, Endpoint endpoint) async {
     final content = entry.toMap();
-    return await _server.postContentToServer(endpoint, content);
+    return await _server.postContent(endpoint, content);
   }
 }

@@ -37,7 +37,7 @@ class ApiServerDataSource {
     return endpointStr;
   }
 
-  Future<Response> fetchContentFromServer(Endpoint endpoint) async {
+  Future<Response> fetchContent(Endpoint endpoint) async {
     // fetch content from rest api
     Map result;
 
@@ -50,7 +50,7 @@ class ApiServerDataSource {
     return Response(result);
   }
 
-  Future<Response> postContentToServer(Endpoint endpoint, Map content) async {
+  Future<Response> postContent(Endpoint endpoint, Map content) async {
     // post content to rest api
     Map result;
 
@@ -63,7 +63,7 @@ class ApiServerDataSource {
     return Response(result);
   }
 
-  Future<Response> updateContentFromServer(
+  Future<Response> updateContent(
       Endpoint endpoint, Map content) async {
     // close content from rest api
     Map result;
@@ -80,7 +80,7 @@ class ApiServerDataSource {
     return Response(result);
   }
 
-  Future<Response> closeContentFromServer(
+  Future<Response> closeContent(
       Endpoint endpoint, Map content) async {
     // close content from rest api
     Map result;
@@ -97,7 +97,7 @@ class ApiServerDataSource {
     return Response(result);
   }
 
-  Future<Response> deleteContentFromServer(
+  Future<Response> deleteContent(
       Endpoint endpoint, Map content) async {
     // delete content from rest api
     Map result;

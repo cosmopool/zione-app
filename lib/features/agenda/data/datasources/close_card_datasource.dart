@@ -12,6 +12,6 @@ class CloseCardDataSource implements ICloseCardDataSouce  {
   @override
   Future<IResponse> call(EntryEntity entry, Endpoint endpoint) async {
     final content = entry.toMap();
-    return await _server.closeContentFromServer(endpoint, content);
+    return await _server.closeContent(endpoint, content);
   }
 }

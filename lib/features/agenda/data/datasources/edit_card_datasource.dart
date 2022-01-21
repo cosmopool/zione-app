@@ -12,6 +12,6 @@ class EditCardDataSource implements IEditCardDataSouce  {
   @override
   Future<IResponse> call(EntryEntity entry, Endpoint endpoint) async {
     final content = entry.toMap();
-    return await _server.updateContentFromServer(endpoint, content);
+    return await _server.updateContent(endpoint, content);
   }
 }

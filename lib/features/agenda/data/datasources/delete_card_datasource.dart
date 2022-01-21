@@ -12,6 +12,6 @@ class DeleteCardDataSource implements IDeleteCardDataSouce  {
   @override
   Future<IResponse> call(EntryEntity entry, Endpoint endpoint) async {
     final content = entry.toMap();
-    return await _server.deleteContentFromServer(endpoint, content);
+    return await _server.deleteContent(endpoint, content);
   }
 }

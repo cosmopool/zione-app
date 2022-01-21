@@ -10,6 +10,6 @@ class RefreshFeedDataSource implements IRefreshFeedDataSouce  {
 
   @override
   Future<IResponse> call(Endpoint endpoint) async {
-    return await _server.fetchContentFromServer(endpoint);
+    return await _server.fetchContent(endpoint);
   }
 }
