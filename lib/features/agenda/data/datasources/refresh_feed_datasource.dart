@@ -27,15 +27,13 @@ class RefreshFeedDataSource implements IRefreshFeedDataSouce  {
         {
           final lastFetchInMinutes = DateTime.now().difference(_lastTicketFetch).inMinutes;
           if (lastFetchInMinutes < _settings.remoteServerRefreshTimeMinutes) {
-            // response = ticketsCache;
-            response = _cache.fetchContent(endpoint);
+            response = ticketsCache;
           } else {
             response = await _server.fetchContent(endpoint);
             _lastTicketFetch = DateTime.now();
 
             if (response.status == ResponseStatus.success) {
-              // ticketsCache = response;
-              _cache.saveContent(endpoint, response.result);
+              ticketsCache = response;
             }
           }
         }
@@ -44,15 +42,13 @@ class RefreshFeedDataSource implements IRefreshFeedDataSouce  {
         {
           final lastFetchInMinutes = DateTime.now().difference(_lastAgendaFetch).inMinutes;
           if (lastFetchInMinutes < _settings.remoteServerRefreshTimeMinutes) {
-            // response = agendaCache;
-            response = _cache.fetchContent(endpoint);
+            response = agendaCache;
           } else {
             response = await _server.fetchContent(endpoint);
             _lastAgendaFetch = DateTime.now();
 
             if (response.status == ResponseStatus.success) {
-              // agendaCache = response;
-              _cache.saveContent(endpoint, response.result);
+              agendaCache = response;
             }
           }
         }
@@ -62,15 +58,13 @@ class RefreshFeedDataSource implements IRefreshFeedDataSouce  {
           final lastFetchInMinutes =
               DateTime.now().difference(_lastAppointmentFetch).inMinutes;
           if (lastFetchInMinutes <= _settings.remoteServerRefreshTimeMinutes) {
-            // response = appointmentsCache;
-            response = _cache.fetchContent(endpoint);
+            response = appointmentsCache;
           } else {
             response = await _server.fetchContent(endpoint);
             _lastAppointmentFetch = DateTime.now();
 
             if (response.status == ResponseStatus.success) {
-              // appointmentsCache = response;
-              _cache.saveContent(endpoint, response.result);
+              appointmentsCache = response;
             }
           }
         }
