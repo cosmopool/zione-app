@@ -4,7 +4,8 @@ import 'package:zione/features/agenda/infra/datasources/i_refresh_feed_datasourc
 import 'package:zione/features/agenda/infra/datasources/i_response_api_request.dart';
 import 'package:zione/utils/enums.dart';
 
-import 'local/cache_datasource.dart';
+import 'local/i_cache_datasource.dart';
+
 
 class RefreshFeedDataSource implements IRefreshFeedDataSouce  {
   final ApiServerDataSource _server;

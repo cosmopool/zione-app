@@ -4,8 +4,8 @@ import 'package:zione/features/agenda/data/datasources/close_card_datasource.dar
 import 'package:zione/features/agenda/data/datasources/delete_card_datasource.dart';
 import 'package:zione/features/agenda/data/datasources/edit_card_datasource.dart';
 import 'package:zione/features/agenda/data/datasources/insert_card_datasource.dart';
-import 'package:zione/features/agenda/data/datasources/local/cache_datasource.dart';
 import 'package:zione/features/agenda/data/datasources/local/hive_datasource.dart';
+import 'package:zione/features/agenda/data/datasources/local/i_cache_datasource.dart';
 import 'package:zione/features/agenda/data/datasources/refresh_feed_datasource.dart';
 import 'package:zione/features/agenda/data/datasources/rest_api_server/rest_api_datasource.dart';
 import 'package:zione/features/agenda/domain/repositories/i_close_card_repository.dart';

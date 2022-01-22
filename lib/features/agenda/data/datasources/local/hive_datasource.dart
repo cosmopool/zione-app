@@ -1,8 +1,9 @@
 import 'package:hive/hive.dart';
-import 'package:zione/features/agenda/data/datasources/local/cache_datasource.dart';
 import 'package:zione/features/agenda/data/datasources/rest_api_server/rest_api_response_model.dart';
 import 'package:zione/features/agenda/infra/datasources/i_response_api_request.dart';
 import 'package:zione/utils/enums.dart';
+
+import 'i_cache_datasource.dart';
 
 class HiveDatasouce extends ICacheDatasource {
   Box box = Hive.box('contentCacheBox');
