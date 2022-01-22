@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:zione/features/agenda/ui/providers/feed_provider.dart';
 import 'package:zione/features/agenda/ui/screens/agenda_page.dart';
 
 import 'core/dependency_injection.dart';
 
-
-void main() {
+Future<void> main() async {
   Inject.init();
+  // TODO: try to use static method call to setup hive
+  await Hive.initFlutter();
+  await Hive.openBox('contentCacheBox');
   runApp(App());
 }
 
