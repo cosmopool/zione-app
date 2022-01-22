@@ -41,6 +41,9 @@ class FeedProvider extends ChangeNotifier with IFeedProvider {
   List<AppointmentEntity> _appointmentFeed = [];
   Map _agendaFeedIndexedByDate = {};
   Map _appointmentFeedIndexedByDate = {};
+  List _lastTicketResponse = [];
+  List _lastAgendaResponse = [];
+  List _lastAppointmentResponse = [];
   bool _result = false;
   bool _isLoading = false;
 
@@ -111,11 +114,33 @@ class FeedProvider extends ChangeNotifier with IFeedProvider {
     map[date].add(entry);
   }
 
+  bool _needToRedraw(IResponse response, Endpoint endpoint) {
+    bool result = false;
+
+    switch(endpoint){
+      case Endpoint.tickets: {
+        if (_lastTicketResponse != response.result) result = true;
+      } break;
+      case Endpoint.agenda: {
+        if (_lastAgendaResponse != response.result) result = true;
+      } break;
+      case Endpoint.appointments: {
+        if (_lastAppointmentResponse != response.result) result = true;
+      } break;
+    }
+
+    return result; 
+  }
+
   @override
   void refresh(Endpoint endpoint) async {
     final IResponse response = await _refresh(endpoint);
-    _populateFeed(response, endpoint);
-    notifyListeners();
+    final bool needToRedraw = _needToRedraw(response, endpoint);
+
+    if (needToRedraw) {
+      _populateFeed(response, endpoint);
+      notifyListeners();
+    }
   }
 
   @override
