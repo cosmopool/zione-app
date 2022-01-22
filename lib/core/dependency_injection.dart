@@ -1,8 +1,11 @@
 import 'package:get_it/get_it.dart';
+import 'package:zione/core/settings.dart';
 import 'package:zione/features/agenda/data/datasources/close_card_datasource.dart';
 import 'package:zione/features/agenda/data/datasources/delete_card_datasource.dart';
 import 'package:zione/features/agenda/data/datasources/edit_card_datasource.dart';
 import 'package:zione/features/agenda/data/datasources/insert_card_datasource.dart';
+import 'package:zione/features/agenda/data/datasources/local/cache_datasource.dart';
+import 'package:zione/features/agenda/data/datasources/local/hive_datasource.dart';
 import 'package:zione/features/agenda/data/datasources/refresh_feed_datasource.dart';
 import 'package:zione/features/agenda/data/datasources/rest_api_server/rest_api_datasource.dart';
 import 'package:zione/features/agenda/domain/repositories/i_close_card_repository.dart';
@@ -34,12 +37,16 @@ class Inject {
     // servers
     getIt.registerSingleton<ApiServerDataSource>(ApiServerDataSource());
 
+    // settings
+    getIt.registerSingleton<Settings>(Settings());
+
     // datasources
     getIt.registerLazySingleton<ICloseCardDataSouce>(() => CloseCardDataSource(getIt()));
     getIt.registerLazySingleton<IInsertCardDataSource>(() => InsertCardDataSource(getIt()));
     getIt.registerLazySingleton<IEditCardDataSouce>(() => EditCardDataSource(getIt()));
     getIt.registerLazySingleton<IDeleteCardDataSouce>(() => DeleteCardDataSource(getIt()));
-    getIt.registerLazySingleton<IRefreshFeedDataSouce>(() => RefreshFeedDataSource(getIt()));
+    getIt.registerLazySingleton<IRefreshFeedDataSouce>(() => RefreshFeedDataSource(getIt(), getIt(), getIt()));
+    getIt.registerLazySingleton<ICacheDatasource>(() => HiveDatasouce());
 
     // repositories
     getIt.registerLazySingleton<ICloseCardRepository>(() => CloseCardRepository(getIt()));
