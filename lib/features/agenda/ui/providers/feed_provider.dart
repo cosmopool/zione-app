@@ -72,6 +72,7 @@ class FeedProvider extends ChangeNotifier with IFeedProvider {
         case Endpoint.tickets:
           {
             _ticketFeed = [];
+            _ticketFeedIndexedByDate.clear();
             response.result.forEach((entry) {
               final _entry = TicketEntity(entry);
               _ticketFeed.add(_entry);
@@ -81,6 +82,7 @@ class FeedProvider extends ChangeNotifier with IFeedProvider {
         case Endpoint.appointments:
           {
             _appointmentFeed = [];
+            _appointmentFeedIndexedByDate.clear();
             response.result.forEach((entry) {
               final _entry = AppointmentEntity(entry);
               _appointmentFeed.add(_entry);
@@ -91,6 +93,7 @@ class FeedProvider extends ChangeNotifier with IFeedProvider {
         case Endpoint.agenda:
           {
             _agendaEntryFeed = [];
+            _agendaFeedIndexedByDate.clear();
             response.result.forEach((entry) {
               final _entry = AgendaEntryEntity(entry);
               _agendaEntryFeed.add(_entry);
