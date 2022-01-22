@@ -18,7 +18,6 @@ abstract class IFeedProvider {
   List<TicketEntity> get ticketFeed;
   List<AgendaEntryEntity> get agendaEntryFeed;
   List<AppointmentEntity> get appointmentFeed;
-  Map get ticketFeedByDate;
   Map get agendaEntryFeedByDate;
   void _populateFeed(IResponse response, Endpoint endpoint);
   void _indexEntryByDate(entry, map);
