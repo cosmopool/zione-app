@@ -40,7 +40,6 @@ class FeedProvider extends ChangeNotifier with IFeedProvider {
   List<TicketEntity> _ticketFeed = [];
   List<AgendaEntryEntity> _agendaEntryFeed = [];
   List<AppointmentEntity> _appointmentFeed = [];
-  Map _ticketFeedIndexedByDate = {};
   Map _agendaFeedIndexedByDate = {};
   Map _appointmentFeedIndexedByDate = {};
   bool _result = false;
@@ -61,8 +60,6 @@ class FeedProvider extends ChangeNotifier with IFeedProvider {
   @override
   List<AppointmentEntity> get appointmentFeed => _appointmentFeed;
   @override
-  Map get ticketFeedByDate => _ticketFeedIndexedByDate;
-  @override
   Map get agendaEntryFeedByDate => _agendaFeedIndexedByDate;
 
   @override
@@ -72,7 +69,6 @@ class FeedProvider extends ChangeNotifier with IFeedProvider {
         case Endpoint.tickets:
           {
             _ticketFeed = [];
-            _ticketFeedIndexedByDate.clear();
             response.result.forEach((entry) {
               final _entry = TicketEntity(entry);
               _ticketFeed.add(_entry);
