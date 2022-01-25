@@ -27,20 +27,18 @@ class HiveDatasouce extends ICacheDatasource {
   }
 
   @override
-  IResponse fetchContent(Endpoint endpoint) {
+  Future<IResponse> fetchContent(Endpoint endpoint) async {
     final String boxKey = _parseEndpoint(endpoint);
-    final List content = box.get(boxKey);
-    final response = Response({'Status': 'Success', 'Result': content});
-
+    final IResponse response = await box.get(boxKey, defaultValue: Response.noConnection());
     return response;
   }
 
   @override
-  IResponse saveContent(Endpoint endpoint, List listOfContent) {
+  Future<IResponse> saveContent(Endpoint endpoint, IResponse response) async {
     final String boxKey = _parseEndpoint(endpoint);
-    box.put(boxKey, listOfContent);
-    final response = Response({'Status': 'Success', 'Result': 'Saved!'});
+    await box.put(boxKey, response);
+    final responseToReturn = Response({'Status': 'Success', 'Result': 'Saved!'});
 
-    return response;
+    return responseToReturn;
   }
 }
