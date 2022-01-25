@@ -8,29 +8,18 @@ import 'i_cache_datasource.dart';
 class HiveDatasouce extends ICacheDatasource {
   Box box = Hive.box('contentCacheBox');
 
-  // static void initBox() async {
-  //   await Hive.initFlutter();
-  //   await Hive.openBox('contentCacheBox');
-  // }
-
   String _parseEndpoint(Endpoint endpoint) {
     late String endpointStr;
 
     switch (endpoint) {
       case Endpoint.tickets:
-        {
-          endpointStr = 'tickets';
-        }
+        endpointStr = 'tickets';
         break;
       case Endpoint.appointments:
-        {
-          endpointStr = "appointments";
-        }
+        endpointStr = "appointments";
         break;
       case Endpoint.agenda:
-        {
-          endpointStr = "agenda";
-        }
+        endpointStr = "agenda";
         break;
     }
 
