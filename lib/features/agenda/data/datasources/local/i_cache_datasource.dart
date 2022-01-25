@@ -2,6 +2,6 @@ import 'package:zione/features/agenda/infra/datasources/i_response_api_request.d
 import 'package:zione/utils/enums.dart';
 
 abstract class ICacheDatasource {
-  IResponse saveContent(Endpoint endpoint, List listOfContent);
-  IResponse fetchContent(Endpoint endpoint);
+  Future<IResponse> saveContent(Endpoint endpoint, IResponse response);
+  Future<IResponse> fetchContent(Endpoint endpoint);
 }
