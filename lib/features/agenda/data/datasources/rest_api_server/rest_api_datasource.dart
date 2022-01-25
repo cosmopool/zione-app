@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:http/http.dart' as http;
 import 'package:zione/core/auth.dart' as auth_config;
@@ -43,9 +44,13 @@ class ApiServerDataSource {
 
     final _endpoint = _parseEndpoint(endpoint);
     final url = Uri.http("${conf.host}:${conf.port}", "/$_endpoint");
-    final response = await http.get(url, headers: _headers);
+    try {
+      final response = await http.get(url, headers: _headers);
+      result = jsonDecode(response.body);
+    } on SocketException {
+      return Response.noConnection();
+    }
 
-    result = jsonDecode(response.body);
 
     return Response(result);
   }
