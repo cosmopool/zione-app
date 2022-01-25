@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:zione/features/agenda/data/datasources/rest_api_server/rest_api_response_model.dart';
 
 import 'package:zione/utils/enums.dart';
-import 'package:zione/features/agenda/data/models/rest_api_response_model.dart';
 
 void main() {
   test('Status should return success given valid response', () {
@@ -16,6 +16,20 @@ void main() {
     final response = Response(json);
 
     expect(response.status, equals(ResponseStatus.err));
+  });
+
+  test('Status should return success given valid response', () {
+    const Map json = {"Status":"Success", "Result":"Success message from server."};
+    final response = Response(json);
+
+    expect(response.result, equals("Success message from server."));
+  });
+
+  test('Status should return error given valid response', () {
+    const Map json = {"Status":"Error", "Result":"Success message from server."};
+    final response = Response(json);
+
+    expect(response.result, equals("Success message from server."));
   });
 
   test('Status should return error given invalid response', () {

@@ -6,4 +6,5 @@ class DeleteCardRepositoryTest extends IDeleteCardRepository {
   @override
   Future<bool> call(EntryEntity entry, Endpoint endpoint) async {
     return true;
+  }
 }
