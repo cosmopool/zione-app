@@ -7,11 +7,15 @@ import 'package:zione/features/agenda/ui/providers/feed_provider.dart';
 import 'package:zione/features/agenda/ui/screens/agenda_page.dart';
 
 import 'core/dependency_injection.dart';
+import 'utils/enums.dart';
+import 'features/agenda/data/datasources/rest_api_server/rest_api_response_model.dart';
 
 Future<void> main() async {
   Inject.init();
   // TODO: try to use static method call to setup hive
   await Hive.initFlutter();
+  Hive.registerAdapter(ResponseStatusAdapter());
+  Hive.registerAdapter(ResponseAdapter());
   await Hive.openBox('contentCacheBox');
   runApp(App());
 }
