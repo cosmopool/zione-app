@@ -1,6 +1,15 @@
 
 // rest api response status
-enum ResponseStatus { success, err }
+import 'package:hive/hive.dart';
+
+part 'enums.g.dart';
+
+@HiveType(typeId: 2)
+enum ResponseStatus { 
+  @HiveField(0)
+  success, 
+  @HiveField(1)
+  err }
 // rest api endpoint
 enum Endpoint { tickets, appointments, agenda }
 // ticket menu
