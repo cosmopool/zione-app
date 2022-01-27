@@ -10,7 +10,7 @@ class AppointmentEntity extends EntryEntity {
   bool isFinished = false;
   final Entry _type = Entry.appointment;
 
-  AppointmentEntity(Map<String, dynamic> response) {
+  AppointmentEntity(Map response) {
     _id = response['id'] as int;
     date = response['date'] as String;
     time = response['time'] as String;

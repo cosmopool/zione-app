@@ -16,7 +16,7 @@ class AgendaEntryEntity extends EntryEntity {
   bool isFinished = false;
   bool ticketIsFinished = false;
 
-  AgendaEntryEntity(Map<String, dynamic> entryMap) {
+  AgendaEntryEntity(Map entryMap) {
     _id = entryMap['id'] as int;
     clientName = entryMap['clientName'] as String;
     clientPhone = entryMap['clientPhone'] as String;
