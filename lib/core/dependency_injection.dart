@@ -1,4 +1,5 @@
 import 'package:get_it/get_it.dart';
+import 'package:hive/hive.dart';
 import 'package:zione/core/settings.dart';
 import 'package:zione/features/agenda/data/datasources/close_card_datasource.dart';
 import 'package:zione/features/agenda/data/datasources/delete_card_datasource.dart';
@@ -46,7 +47,7 @@ class Inject {
     getIt.registerLazySingleton<IEditCardDataSouce>(() => EditCardDataSource(getIt()));
     getIt.registerLazySingleton<IDeleteCardDataSouce>(() => DeleteCardDataSource(getIt()));
     getIt.registerLazySingleton<IRefreshFeedDataSouce>(() => RefreshFeedDataSource(getIt(), getIt(), getIt()));
-    getIt.registerLazySingleton<ICacheDatasource>(() => HiveDatasouce());
+    getIt.registerLazySingleton<ICacheDatasource>(() => HiveDatasouce(Hive.box('contentCacheBox')));
 
     // repositories
     getIt.registerLazySingleton<ICloseCardRepository>(() => CloseCardRepository(getIt()));

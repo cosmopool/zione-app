@@ -6,7 +6,9 @@ import 'package:zione/utils/enums.dart';
 import 'i_cache_datasource.dart';
 
 class HiveDatasouce extends ICacheDatasource {
-  Box box = Hive.box('contentCacheBox');
+  Box _box;
+
+  HiveDatasouce(this._box);
 
   String _parseEndpoint(Endpoint endpoint) {
     late String endpointStr;
@@ -29,14 +31,14 @@ class HiveDatasouce extends ICacheDatasource {
   @override
   Future<IResponse> fetchContent(Endpoint endpoint) async {
     final String boxKey = _parseEndpoint(endpoint);
-    final IResponse response = await box.get(boxKey, defaultValue: Response.noConnection());
+    final IResponse response = await _box.get(boxKey, defaultValue: Response.noConnection());
     return response;
   }
 
   @override
   Future<IResponse> saveContent(Endpoint endpoint, IResponse response) async {
     final String boxKey = _parseEndpoint(endpoint);
-    await box.put(boxKey, response);
+    await _box.put(boxKey, response);
     final responseToReturn = Response({'Status': 'Success', 'Result': 'Saved!'});
 
     return responseToReturn;
