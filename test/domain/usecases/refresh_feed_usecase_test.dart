@@ -10,14 +10,6 @@ import 'package:zione/utils/enums.dart';
 import '../../authorizarion_token_for_tests.dart';
 import 'agenda_endpoint_json_response.dart';
 
-class RefreshFeedUsecaseTest implements IRefreshFeedUsecase {
-  @override
-  Future<IResponse> call(Endpoint endpoint) async {
-    final response = Response(responseForTests);
-    return response;
-  }
-}
-
 main() {
   token = testToken;
   Inject.init();

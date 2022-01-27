@@ -1,4 +1,4 @@
-Map agendaEndpoint = {
+Map<String, dynamic> agendaEndpoint = {
     "Status": "Success",
     "Result": [
         {
