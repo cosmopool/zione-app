@@ -43,6 +43,8 @@ dependencies:
   go_router: ^3.0.1
   hive: ^2.0.5
   hive_flutter: ^1.1.0
+  modal_bottom_sheet: ^2.0.0
+  date_time_picker: ^2.1.0
 
 dev_dependencies:
   flutter_test:
