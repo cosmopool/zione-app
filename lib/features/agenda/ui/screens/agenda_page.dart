@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:provider/provider.dart';
 import 'package:zione/core/widgets/bottom_navigation_bar_widget.dart';
 import 'package:zione/features/agenda/ui/providers/feed_provider.dart';
 import 'package:zione/features/agenda/ui/widgets/entry_feed/appointments_feed.dart';
 import 'package:zione/features/agenda/ui/widgets/entry_feed/ticket_feed.dart';
+import 'package:zione/features/agenda/ui/widgets/entry_form/add_entry.dart';
+import 'package:zione/features/agenda/ui/widgets/entry_form/add_ticket.dart';
 import 'package:zione/utils/enums.dart';
 
 class AgendaPage extends StatefulWidget {
@@ -13,42 +17,76 @@ class AgendaPage extends StatefulWidget {
   _AgendaPageState createState() => _AgendaPageState();
 }
 
-class _AgendaPageState extends State<AgendaPage> {
+class _AgendaPageState extends State<AgendaPage>
+    with SingleTickerProviderStateMixin {
+  late TabController _tabController;
+
   @override
   void initState() {
     super.initState();
     context.read<FeedProvider>().refresh(Endpoint.tickets);
+    _tabController = TabController(length: 2, vsync: this, initialIndex: 0);
+    _tabController.addListener(_handleTabIndex);
+  }
+
+  @override
+  void dispose() {
+    _tabController.removeListener(_handleTabIndex);
+    _tabController.dispose();
+    super.dispose();
+  }
+
+  void _handleTabIndex() {
+    setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-      initialIndex: 1,
-      length: 2,
-      child: Scaffold(
-        bottomNavigationBar: const BottomNavigationBarCustom(),
-        appBar: AppBar(
-          bottom: const TabBar(tabs: [
+    return Scaffold(
+      bottomNavigationBar: const BottomNavigationBarCustom(),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () => _showAddEntryModal(context, _tabController.index),
+        label: const Text('Adicionar'),
+        icon: const Icon(FontAwesomeIcons.plus),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      appBar: AppBar(
+        bottom: TabBar(
+          controller: _tabController,
+          tabs: const [
             Tab(
               text: "Agendamentos",
             ),
             Tab(
               text: "Chamados",
             ),
-          ]),
-        ),
-        body: const TabBarView(
-          children: <Widget>[
-            Center(
-              child: AppointmentsFeed(),
-            ),
-            Center(
-              child: TicketsFeed(),
-              // child: Text("It's rainy here"),
-            ),
           ],
         ),
       ),
+      body: TabBarView(
+        controller: _tabController,
+        children: const [
+          Center(
+            child: AppointmentsFeed(),
+          ),
+          Center(
+            child: TicketsFeed(),
+            // child: Text("It's rainy here"),
+          ),
+        ],
+      ),
     );
   }
+}
+
+void _showAddEntryModal(context, int index) {
+  Widget _agendaEntry() { return EntryForm(); }
+  Widget _ticket() { return TicketForm(); }
+
+  showBarModalBottomSheet(
+    expand: true,
+    context: context,
+    backgroundColor: Colors.transparent,
+    builder: (context) => (index == 0) ? _agendaEntry() : _ticket(),
+  );
 }
