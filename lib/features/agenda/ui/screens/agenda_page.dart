@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:zione/core/widgets/bottom_navigation_bar_widget.dart';
 import 'package:zione/features/agenda/ui/providers/feed_provider.dart';
 import 'package:zione/features/agenda/ui/widgets/entry_feed/appointments_feed.dart';
 import 'package:zione/features/agenda/ui/widgets/entry_feed/ticket_feed.dart';
@@ -25,6 +26,7 @@ class _AgendaPageState extends State<AgendaPage> {
       initialIndex: 1,
       length: 2,
       child: Scaffold(
+        bottomNavigationBar: const BottomNavigationBarCustom(),
         appBar: AppBar(
           bottom: const TabBar(tabs: [
             Tab(
