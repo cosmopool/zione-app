@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:provider/provider.dart';
 import 'package:zione/core/widgets/bottom_navigation_bar_widget.dart';
 import 'package:zione/features/agenda/ui/providers/feed_provider.dart';
+import 'package:zione/features/agenda/ui/widgets/bottom_modal/bottom_modal.dart';
 import 'package:zione/features/agenda/ui/widgets/entry_feed/appointments_feed.dart';
 import 'package:zione/features/agenda/ui/widgets/entry_feed/ticket_feed.dart';
 import 'package:zione/features/agenda/ui/widgets/entry_form/add_entry.dart';
@@ -45,8 +45,11 @@ class _AgendaPageState extends State<AgendaPage>
     return Scaffold(
       bottomNavigationBar: const BottomNavigationBarCustom(),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () => _showAddEntryModal(context, _tabController.index),
         label: const Text('Adicionar'),
+        onPressed: () => showBottomAutoSizeModal(
+          context,
+          (_tabController.index == 0) ? EntryForm() : TicketForm(),
+        ),
         icon: const Icon(FontAwesomeIcons.plus),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
@@ -77,16 +80,4 @@ class _AgendaPageState extends State<AgendaPage>
       ),
     );
   }
-}
-
-void _showAddEntryModal(context, int index) {
-  Widget _agendaEntry() { return EntryForm(); }
-  Widget _ticket() { return TicketForm(); }
-
-  showBarModalBottomSheet(
-    expand: true,
-    context: context,
-    backgroundColor: Colors.transparent,
-    builder: (context) => (index == 0) ? _agendaEntry() : _ticket(),
-  );
 }
