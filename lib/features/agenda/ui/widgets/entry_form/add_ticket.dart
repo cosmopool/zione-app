@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
 
-import 'package:zione_app/features/entry_form/input_text.dart' as input;
-import 'package:zione_app/repositories/request.dart' as req;
+import 'components/input_text.dart';
 
 class TicketForm extends StatefulWidget {
   String? _clientName;
@@ -28,7 +27,7 @@ class _TicketFormState extends State<TicketForm> {
       padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 7.5),
       child: TextFormField(
         keyboardType: textType,
-        decoration: input.customInputDecoration(label),
+        decoration: customInputDecoration(label),
         validator: (value) {
           if (value == null || value.isEmpty) {
             return 'Preencha esse campo';
@@ -51,7 +50,7 @@ class _TicketFormState extends State<TicketForm> {
       padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 7.5),
       child: TextFormField(
         keyboardType: textType,
-        decoration: input.customInputDecoration(label),
+        decoration: customInputDecoration(label),
         validator: (value) {
           if (value == null || value.isEmpty) {
             return 'Preencha esse campo';
@@ -74,7 +73,7 @@ class _TicketFormState extends State<TicketForm> {
       padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 7.5),
       child: TextFormField(
         keyboardType: textType,
-        decoration: input.customInputDecoration(label),
+        decoration: customInputDecoration(label),
         validator: (value) {
           if (value == null || value.isEmpty) {
             return 'Preencha esse campo';
@@ -97,7 +96,7 @@ class _TicketFormState extends State<TicketForm> {
       padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 7.5),
       child: TextFormField(
         keyboardType: textType,
-        decoration: input.customInputDecoration(label),
+        decoration: customInputDecoration(label),
         validator: (value) {
           if (value == null || value.isEmpty) {
             return 'Preencha esse campo';
@@ -117,7 +116,7 @@ class _TicketFormState extends State<TicketForm> {
       padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 7.5),
       child: TextFormField(
         keyboardType: TextInputType.multiline,
-        decoration: input.customInputDecoration('Descrição'),
+        decoration: customInputDecoration('Descrição'),
         validator: (value) {
           if (value == null || value.isEmpty) {
             return 'Preencha esse campo';
@@ -132,6 +131,7 @@ class _TicketFormState extends State<TicketForm> {
     );
   }
 
+  // TODO: send ticket add request
   void _addTicket() async {
     Map<String, String?> ticket = {
       'clientName': widget._clientName,
@@ -146,30 +146,30 @@ class _TicketFormState extends State<TicketForm> {
     };
 
     // print(ticket);
-    await req.postContent('tickets', ticket).then((value) {
-      String status;
-      late String res;
+    // await req.postContent('tickets', ticket).then((value) {
+    //   String status;
+    //   late String res;
 
-      try {
-        status = value['Status'];
-      } catch (e) {
-        status = 'Error';
-      }
+    //   try {
+    //     status = value['Status'];
+    //   } catch (e) {
+    //     status = 'Error';
+    //   }
 
-      if (status == 'Success') {
-        res = 'Adicionado';
-      } else {
-        // TODO: save resquest to try later so user do not need to write all again
-        res = 'Erro ao adicionar Chamado. Veja mais em pendentes';
-      }
+    //   if (status == 'Success') {
+    //     res = 'Adicionado';
+    //   } else {
+    //     // TODO: save resquest to try later so user do not need to write all again
+    //     res = 'Erro ao adicionar Chamado. Veja mais em pendentes';
+    //   }
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(res),
-          behavior: SnackBarBehavior.floating,
-        ),
-      );
-    });
+    //   ScaffoldMessenger.of(context).showSnackBar(
+    //     SnackBar(
+    //       content: Text(res),
+    //       behavior: SnackBarBehavior.floating,
+    //     ),
+    //   );
+    // });
   }
 
   @override
