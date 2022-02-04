@@ -56,14 +56,17 @@ class _AgendaPageState extends State<AgendaPage>
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       appBar: AppBar(
+        title: const Text('Agenda'),
         bottom: TabBar(
           controller: _tabController,
           tabs: const [
             Tab(
               text: "Agendamentos",
+              icon: Icon(FontAwesomeIcons.calendarCheck),
             ),
             Tab(
               text: "Chamados",
+              icon: Icon(FontAwesomeIcons.tools),
             ),
           ],
         ),
@@ -76,7 +79,6 @@ class _AgendaPageState extends State<AgendaPage>
           ),
           Center(
             child: TicketsFeed(),
-            // child: Text("It's rainy here"),
           ),
         ],
       ),
