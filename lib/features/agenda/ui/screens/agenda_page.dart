@@ -45,11 +45,13 @@ class _AgendaPageState extends State<AgendaPage>
     return Scaffold(
       bottomNavigationBar: const BottomNavigationBarCustom(),
       floatingActionButton: FloatingActionButton.extended(
-        label: const Text('Adicionar'),
         onPressed: () => showBottomAutoSizeModal(
           context,
           (_tabController.index == 0) ? EntryForm() : TicketForm(),
         ),
+        label: (_tabController.index == 0)
+            ? const Text('Agendamento')
+            : const Text('Chamado'),
         icon: const Icon(FontAwesomeIcons.plus),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
