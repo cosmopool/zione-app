@@ -19,13 +19,13 @@ class TicketEntity extends EntryEntity {
   //     required this.description});
 
   TicketEntity(Map map) {
-    _id = map['id'] as int;
+    (map['id'] != null) ? _id = map['id'] as int : -1;
     clientName = map['clientName'] as String;
     clientPhone = map['clientPhone'] as String;
     clientAddress = map['clientAddress'] as String;
     serviceType = map['serviceType'] as String;
     description = map['description'] as String;
-    isFinished = map['isFinished'] as bool;
+    (map['isFinished'] != null) ? isFinished = map['isFinished'] as bool : false;
   }
 
   @override
@@ -53,7 +53,9 @@ class TicketEntity extends EntryEntity {
   void edit(Map map) {
     (map['clientName'] != null) ? clientName = map['clientName'] : null;
     (map['clientPhone'] != null) ? clientPhone = map['clientPhone'] : null;
-    (map['clientAddress'] != null) ? clientAddress = map['clientAddress'] : null;
+    (map['clientAddress'] != null)
+        ? clientAddress = map['clientAddress']
+        : null;
     (map['serviceType'] != null) ? serviceType = map['serviceType'] : null;
     (map['description'] != null) ? description = map['description'] : null;
   }

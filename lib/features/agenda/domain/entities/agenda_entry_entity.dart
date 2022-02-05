@@ -17,7 +17,7 @@ class AgendaEntryEntity extends EntryEntity {
   bool ticketIsFinished = false;
 
   AgendaEntryEntity(Map entryMap) {
-    _id = entryMap['id'] as int;
+    (entryMap['id'] != null) ? _id = entryMap['id'] as int : -1;
     clientName = entryMap['clientName'] as String;
     clientPhone = entryMap['clientPhone'] as String;
     clientAddress = entryMap['clientAddress'] as String;
@@ -26,9 +26,9 @@ class AgendaEntryEntity extends EntryEntity {
     date = entryMap['date'] as String;
     time = entryMap['time'] as String;
     duration = entryMap['duration'] as String;
-    ticketId = entryMap['ticketId'] as int;
-    isFinished = entryMap['isFinished'] as bool;
-    ticketIsFinished = entryMap['ticketIsFinished'] as bool;
+    (entryMap['ticketId'] != null) ? _id = entryMap['ticketId'] as int : -1;
+    (entryMap['isFinished'] != null) ? isFinished = entryMap['isFinished'] as bool : false;
+    (entryMap['ticketIsFinished'] != null) ? isFinished = entryMap['ticketIsFinished'] as bool : false;
 
     time = time.substring(0, 5);
     duration = duration.substring(0, 5);
