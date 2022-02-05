@@ -22,8 +22,9 @@ class TicketForm extends StatefulWidget {
 
 class _TicketFormState extends State<TicketForm> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  // var _clientName;
 
+  // TODO: create basic input field widget to replace all _buildXXXXXX()
+  // function and make code more readble
   Widget _buildClientName() {
     const textType = TextInputType.text;
     const label = 'Nome do cliente';
