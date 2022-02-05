@@ -18,7 +18,7 @@ class _BottomNavigationBarCustomState extends State<BottomNavigationBarCustom> {
     });
   }
 
-  // TODO: write provider to selectedScreenIndex
+  // TODO: write provider for selectedScreenIndex
 
   @override
   Widget build(BuildContext context) {
@@ -31,12 +31,12 @@ class _BottomNavigationBarCustomState extends State<BottomNavigationBarCustom> {
           label: 'Agenda',
         ),
         BottomNavigationBarItem(
-          icon: Icon(FontAwesomeIcons.tasks),
-          label: 'Tarefas',
+          icon: Icon(FontAwesomeIcons.home),
+          label: 'Dashboard',
         ),
         BottomNavigationBarItem(
-          icon: Icon(FontAwesomeIcons.tools),
-          label: 'Tickets',
+          icon: Icon(FontAwesomeIcons.cog),
+          label: 'Configurações',
         ),
       ],
       onTap: _selectScreen,
