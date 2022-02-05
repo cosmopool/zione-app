@@ -1,20 +1,23 @@
+import 'package:date_time_picker/date_time_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:go_router/go_router.dart';
-import 'package:date_time_picker/date_time_picker.dart';
+import 'package:provider/provider.dart';
+import 'package:zione/features/agenda/domain/entities/agenda_entry_entity.dart';
+import 'package:zione/features/agenda/ui/providers/feed_provider.dart';
+import 'package:zione/utils/enums.dart';
 
 import 'components/input_text.dart';
 // import 'package:zione_app/repositories/entry_repository.dart';
 
 class EntryForm extends StatefulWidget {
-  String? _clientName;
-  String? _clientPhone;
-  String? _clientAddress;
-  String? _serviceType;
-  String? _description;
-  String? _date;
-  String? _time;
-  String? _duration;
+  late String _clientName;
+  late String _clientPhone;
+  late String _clientAddress;
+  late String _serviceType;
+  late String _description;
+  late String _date;
+  late String _time;
+  late String _duration;
 
   @override
   _EntryFormState createState() => _EntryFormState();
@@ -180,12 +183,13 @@ class _EntryFormState extends State<EntryForm> {
         onSaved: (value) {
           if (value != null) {
             final dateTime = value.toString().split(" ");
-            final time = dateTime[1].split(":");
+            final time = dateTime[0].split(":");
 
             final hour = time[0];
             final minute = time[1];
             final val = "$hour:$minute";
             widget._time = val;
+            // widget._time = dateTime;
           }
         },
       ),
@@ -208,7 +212,7 @@ class _EntryFormState extends State<EntryForm> {
        onSaved: (value) {
          if (value != null) {
            final dateTime = value.toString().split(" ");
-           final time = dateTime[1].split(":");
+           final time = dateTime[0].split(":");
 
            final hour = time[0];
            final minute = time[1];
@@ -220,7 +224,6 @@ class _EntryFormState extends State<EntryForm> {
     );
   }
 
-  // TODO: send agenda entry add request
   void _addEntry() async {
     Map<String, String?> agendaEntry = {
       'date': widget._date,
@@ -237,30 +240,7 @@ class _EntryFormState extends State<EntryForm> {
       'description': widget._description,
     };
 
-    // print(agendaEntry);
-    // await req.postContent('agenda', agendaEntry).then((value) {
-    //   String status;
-    //   late String res;
-
-    //   try {
-    //     status = value['Status'];
-    //   } catch (e) {
-    //     status = 'Error';
-    //   }
-
-    //   if (status == 'Success') {
-    //     res = 'Adicionado';
-    //   } else {
-    //     res = 'Erro ao adicionar Chamado. Veja mais em pendentes';
-    //   }
-
-    //   ScaffoldMessenger.of(context).showSnackBar(
-    //     SnackBar(
-    //       content: Text(res),
-    //       behavior: SnackBarBehavior.floating,
-    //     ),
-    //   );
-    // });
+    context.read<FeedProvider>().insert(AgendaEntryEntity(agendaEntry), Endpoint.tickets );
   }
 
   @override
@@ -300,7 +280,7 @@ class _EntryFormState extends State<EntryForm> {
                       if (isValid) {
                         currentState.save();
                         _addEntry();
-                        context.pop();
+                        Navigator.pop(context, true);
                       }
                     }
                   },

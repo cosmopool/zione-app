@@ -1,15 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
+import 'package:zione/features/agenda/domain/entities/ticket_entity.dart';
+import 'package:zione/features/agenda/ui/providers/feed_provider.dart';
+import 'package:zione/utils/enums.dart';
 
 import 'components/input_text.dart';
 
 class TicketForm extends StatefulWidget {
-  String? _clientName;
-  String? _clientPhone;
-  String? _clientAddress;
-  String? _serviceType;
-  String? _description;
+  late String _clientName;
+  late String _clientPhone;
+  late String _clientAddress;
+  late String _serviceType;
+  late String _description;
+
+  TicketForm({Key? key}) : super(key: key);
 
   @override
   _TicketFormState createState() => _TicketFormState();
@@ -131,9 +136,8 @@ class _TicketFormState extends State<TicketForm> {
     );
   }
 
-  // TODO: send ticket add request
   void _addTicket() async {
-    Map<String, String?> ticket = {
+    Map<String, dynamic> ticket = {
       'clientName': widget._clientName,
       'clientPhone': widget._clientPhone,
       'clientAddress': widget._clientAddress,
@@ -144,32 +148,8 @@ class _TicketFormState extends State<TicketForm> {
       'serviceType': widget._serviceType,
       'description': widget._description,
     };
-
-    // print(ticket);
-    // await req.postContent('tickets', ticket).then((value) {
-    //   String status;
-    //   late String res;
-
-    //   try {
-    //     status = value['Status'];
-    //   } catch (e) {
-    //     status = 'Error';
-    //   }
-
-    //   if (status == 'Success') {
-    //     res = 'Adicionado';
-    //   } else {
-    //     // TODO: save resquest to try later so user do not need to write all again
-    //     res = 'Erro ao adicionar Chamado. Veja mais em pendentes';
-    //   }
-
-    //   ScaffoldMessenger.of(context).showSnackBar(
-    //     SnackBar(
-    //       content: Text(res),
-    //       behavior: SnackBarBehavior.floating,
-    //     ),
-    //   );
-    // });
+    
+    context.read<FeedProvider>().insert(TicketEntity(ticket), Endpoint.tickets);
   }
 
   @override
@@ -206,7 +186,7 @@ class _TicketFormState extends State<TicketForm> {
                       if (isValid) {
                         currentState.save();
                         _addTicket();
-                        context.pop();
+                        Navigator.pop(context, true);
                       }
                     }
                   },
