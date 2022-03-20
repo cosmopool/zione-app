@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-
 import 'package:zione/features/agenda/domain/entities/agenda_entry_entity.dart';
+
 
 void main() {
   const Map<String, dynamic> nicoEntry = {
@@ -51,44 +51,50 @@ void main() {
   };
 
   test('Id field should be not null, when given valid input', () {
-    final AgendaEntryEntity entry = AgendaEntryEntity(nicoEntry);
+    final entry = AgendaEntryEntity.fromMap(nicoEntry);
 
-    expect(entry.id, equals(1));
-  });
+      expect(entry.id, nicoEntry['id']);
+    });
 
-  test('Should be instance of AgendaEntryEntity, given valid input', () {
-    final AgendaEntryEntity entry = AgendaEntryEntity(nicoEntry);
+    test('Should be instance of AgendaEntryEntity, given valid input', () {
+      final entry = AgendaEntryEntity.fromMap(nicoEntry);
 
-    expect(entry, isInstanceOf<AgendaEntryEntity>());
-  });
+      expect(entry, isInstanceOf<AgendaEntryEntity>());
+    });
 
-  test('Should return map of an instance when toMap is called', () {
-    final AgendaEntryEntity entry = AgendaEntryEntity(nicoEntry);
-    final Map toMap = entry.toMap();
+    test('Should return map of an instance when toMap is called', () {
+      final entry = AgendaEntryEntity.fromMap(nicoEntry);
+      final Map toMap = entry.toMap();
 
-    expect(toMap, nicoEntry);
-  });
+      expect(toMap, nicoEntry);
+    });
 
-  test('Should edit (override) all given fields', () {
-    final AgendaEntryEntity entry = AgendaEntryEntity(nicoEntry);
-    entry.edit(nicoEntryEditedMulti);
+    test('Should edit (override) all given fields', () {
+      final entry = AgendaEntryEntity.fromMap(nicoEntry);
+      entry.edit(nicoEntryEditedMulti);
 
-    expect(entry.toMap(), AgendaEntryEntity(nicoEntryEditedMulti).toMap());
-  });
+      expect(entry.toMap(), AgendaEntryEntity.fromMap(nicoEntryEditedMulti).toMap());
+    });
 
-  test('Should edit (override) only given fields', () {
-    final AgendaEntryEntity entry = AgendaEntryEntity(nicoEntry);
-    final Map toEdit = {"clientPhone": "41996351984"};
-    entry.edit(toEdit);
+    test('Should edit (override) only given fields', () {
+      final entry = AgendaEntryEntity.fromMap(nicoEntry);
+      final Map toEdit = {"clientPhone": "41996351984"};
+      entry.edit(toEdit);
 
-    expect(entry.toMap(), AgendaEntryEntity(nicoEntryEditedPhone).toMap());
-  });
+      expect(entry.toMap(), AgendaEntryEntity.fromMap(nicoEntryEditedPhone).toMap());
+    });
 
-  test('Should not edit (override) id field', () {
-    final AgendaEntryEntity entry = AgendaEntryEntity(nicoEntry);
-    final Map toEdit = {"id": 5};
-    entry.edit(toEdit);
+    test('Should not edit (override) id field', () {
+      final entry = AgendaEntryEntity.fromMap(nicoEntry);
+      final Map toEdit = {"id": 5};
+      entry.edit(toEdit);
 
-    expect(entry.id, 1);
+      expect(entry.id, 1);
+    });
+
+    test('Should return given ticketId from map', () {
+      final entry = AgendaEntryEntity.fromMap(nicoEntry);
+
+      expect(entry.ticketId, nicoEntry['ticketId']);
   });
 }

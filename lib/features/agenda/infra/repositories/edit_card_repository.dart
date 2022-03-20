@@ -10,10 +10,10 @@ class EditCardRepository extends IEditCardRepository {
   EditCardRepository(this._repository);
 
   @override
-  Future<bool> call(EntryEntity entry, Endpoint endpoint) async {
+  Future<bool> call(EntryEntity entry) async {
     bool result = false;
 
-    final IResponse response = await _repository(entry, endpoint);
+    final IResponse response = await _repository(entry);
     (response.status == ResponseStatus.success) ? result = true : result = false;
 
     return result;

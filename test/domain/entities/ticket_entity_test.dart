@@ -36,44 +36,72 @@ void main() {
   };
 
   test('Id field should be not null, when given valid input', () {
-    final TicketEntity entry = TicketEntity(nicoEntry);
+    final TicketEntity entry = TicketEntity.fromMap(nicoEntry);
 
     expect(entry.id, equals(1));
   });
 
   test('Should be instance of TicketEntity, given valid input', () {
-    final TicketEntity entry = TicketEntity(nicoEntry);
+    final TicketEntity entry = TicketEntity.fromMap(nicoEntry);
 
     expect(entry, isInstanceOf<TicketEntity>());
   });
 
   test('Should return map of an instance when toMap is called', () {
-    final TicketEntity entry = TicketEntity(nicoEntry);
+    final TicketEntity entry = TicketEntity.fromMap(nicoEntry);
     final Map toMap = entry.toMap();
 
     expect(toMap, nicoEntry);
   });
 
   test('Should edit (override) all given fields', () {
-    final TicketEntity entry = TicketEntity(nicoEntry);
+    final TicketEntity entry = TicketEntity.fromMap(nicoEntry);
     entry.edit(nicoEntryEditedMulti);
 
-    expect(entry.toMap(), TicketEntity(nicoEntryEditedMulti).toMap());
+    expect(entry.toMap(), TicketEntity.fromMap(nicoEntryEditedMulti).toMap());
   });
 
   test('Should edit (override) only given fields', () {
-    final TicketEntity entry = TicketEntity(nicoEntry);
+    final TicketEntity entry = TicketEntity.fromMap(nicoEntry);
     final Map toEdit = {"clientPhone": "41996351984"};
     entry.edit(toEdit);
 
-    expect(entry.toMap(), TicketEntity(nicoEntryEditedPhone).toMap());
+    expect(entry.toMap(), TicketEntity.fromMap(nicoEntryEditedPhone).toMap());
   });
 
   test('Should not edit (override) id field', () {
-    final TicketEntity entry = TicketEntity(nicoEntry);
+    final TicketEntity entry = TicketEntity.fromMap(nicoEntry);
     final Map toEdit = {"id": 5};
     entry.edit(toEdit);
 
     expect(entry.id, 1);
+  });
+
+  test('Should successful instantiate from map with missing id', () {
+    Map map = {};
+    nicoEntry.forEach((key, value) {
+      if (key != 'id') map[key] = value;
+    });
+    final TicketEntity entry = TicketEntity.fromMap(map);
+
+    expect(entry.id, -1);
+  });
+
+  test('Should successful instantiate from map with missing isFinished', () {
+    Map map = {};
+    nicoEntry.forEach((key, value) {
+      if (key != 'isFinished') map[key] = value;
+    });
+    final TicketEntity entry = TicketEntity.fromMap(map);
+
+    expect(entry.isFinished, false);
+  });
+
+  test('Should edit clientName with new value', () {
+    final TicketEntity entry = TicketEntity.fromMap(nicoEntry);
+    const newName = "New Name";
+    entry.clientName = newName;
+
+    expect(entry.clientName, newName);
   });
 }

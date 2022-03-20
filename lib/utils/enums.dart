@@ -11,8 +11,8 @@ enum ResponseStatus {
   @HiveField(1)
   err }
 // rest api endpoint
-enum Endpoint { tickets, appointments, agenda }
+enum Endpoint { tickets, appointments, agenda, login, users }
 // ticket menu
 enum EntryAction { delete, edit, close }
 // entry type
-enum Entry { ticket, appointment }
+enum Entry { ticket, appointment, agenda}

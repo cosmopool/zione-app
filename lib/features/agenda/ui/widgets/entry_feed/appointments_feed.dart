@@ -29,7 +29,7 @@ class _AppointmentsFeedState extends State<AppointmentsFeed> {
     _isLoading = context.watch<FeedProvider>().isLoading;
     final dates = _entriesByDate.keys.toList();
 
-    AgendaEntryEntity classInstantiator(entryMap) => AgendaEntryEntity(entryMap);
+    AgendaEntryEntity classInstantiator(entryMap) => AgendaEntryEntity.fromMap(entryMap);
     Widget cardInstantiator(entry) => AgendaEntryCard(entry: entry);
 
     return _isLoading

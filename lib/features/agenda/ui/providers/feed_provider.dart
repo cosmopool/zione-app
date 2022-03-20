@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:logging/logging.dart';
+
 import 'package:zione/features/agenda/domain/entities/agenda_entry_entity.dart';
 import 'package:zione/features/agenda/domain/entities/appointment_entity.dart';
 import 'package:zione/features/agenda/domain/entities/entry_entity.dart';
@@ -34,6 +36,7 @@ class FeedProvider extends ChangeNotifier with IFeedProvider {
   final IDeleteCardUseCase _delete;
   final IRefreshFeedUsecase _refresh;
   final IEditCardUsecase _edit;
+  final log = Logger('FeedProvider');
 
   int _cardExpandedId = 0;
   List<TicketEntity> _ticketFeed = [];
@@ -72,7 +75,7 @@ class FeedProvider extends ChangeNotifier with IFeedProvider {
           {
             _ticketFeed = [];
             response.result.forEach((entry) {
-              final _entry = TicketEntity(entry);
+              final _entry = TicketEntity.fromMap(entry);
               _ticketFeed.add(_entry);
             });
           }
@@ -93,7 +96,7 @@ class FeedProvider extends ChangeNotifier with IFeedProvider {
             _agendaEntryFeed = [];
             _agendaFeedIndexedByDate.clear();
             response.result.forEach((entry) {
-              final _entry = AgendaEntryEntity(entry);
+              final _entry = AgendaEntryEntity.fromMap(entry);
               _agendaEntryFeed.add(_entry);
               _indexEntryByDate(_entry, _agendaFeedIndexedByDate);
             });
@@ -127,6 +130,7 @@ class FeedProvider extends ChangeNotifier with IFeedProvider {
       case Endpoint.appointments: {
         if (_lastAppointmentResponse != response.result) result = true;
       } break;
+      default: result = false;
     }
 
     return result; 
@@ -153,8 +157,10 @@ class FeedProvider extends ChangeNotifier with IFeedProvider {
 
   @override
   void insert(EntryEntity entry, Endpoint endpoint) async {
+    log.info("[FEED PROVIDER][INSERT] Sending request to insert ticket");
     _result = false;
     _result = await _insert(entry, endpoint);
+    log.info("[FEED PROVIDER][INSERT] result from insert usecase: $_result");
     result ? refresh(endpoint) : null;
     notifyListeners();
   }
@@ -162,7 +168,7 @@ class FeedProvider extends ChangeNotifier with IFeedProvider {
   @override
   void edit(EntryEntity entry, Endpoint endpoint) async {
     _result = false;
-    _result = await _edit(entry, endpoint);
+    _result = await _edit(entry);
     result ? refresh(endpoint) : null;
     notifyListeners();
   }

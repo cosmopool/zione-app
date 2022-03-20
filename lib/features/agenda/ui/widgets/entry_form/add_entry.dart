@@ -240,7 +240,7 @@ class _EntryFormState extends State<EntryForm> {
       'description': widget._description,
     };
 
-    context.read<FeedProvider>().insert(AgendaEntryEntity(agendaEntry), Endpoint.tickets );
+    context.read<FeedProvider>().insert(AgendaEntryEntity.fromMap(agendaEntry), Endpoint.tickets );
   }
 
   @override

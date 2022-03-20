@@ -16,12 +16,10 @@ class ResponseAdapter extends TypeAdapter<Response> {
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    late final String _status;
-    late dynamic _result;
-    _status = (fields[0] == ResponseStatus.success) ? 'Success' : 'Error';
-    _result = fields[1];
-    final Map json = {'Status': _status, 'Result': _result};
-    return Response(json);
+
+    final status = fields[0] as ResponseStatus;
+    final result = fields[1] as dynamic;
+    return Response(status: status, result: result);
   }
 
   @override

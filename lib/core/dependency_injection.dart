@@ -1,5 +1,5 @@
 import 'package:get_it/get_it.dart';
-import 'package:hive/hive.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:zione/core/settings.dart';
 import 'package:zione/features/agenda/data/datasources/close_card_datasource.dart';
 import 'package:zione/features/agenda/data/datasources/delete_card_datasource.dart';
@@ -8,7 +8,9 @@ import 'package:zione/features/agenda/data/datasources/insert_card_datasource.da
 import 'package:zione/features/agenda/data/datasources/local/hive_datasource.dart';
 import 'package:zione/features/agenda/data/datasources/local/i_cache_datasource.dart';
 import 'package:zione/features/agenda/data/datasources/refresh_feed_datasource.dart';
+import 'package:zione/features/agenda/data/datasources/rest_api_server/i_datasource.dart';
 import 'package:zione/features/agenda/data/datasources/rest_api_server/rest_api_datasource.dart';
+import 'package:zione/features/agenda/data/datasources/rest_api_server/rest_api_response_model.dart';
 import 'package:zione/features/agenda/domain/repositories/i_close_card_repository.dart';
 import 'package:zione/features/agenda/domain/repositories/i_delete_card_repository.dart';
 import 'package:zione/features/agenda/domain/repositories/i_edit_card_repository.dart';
@@ -30,24 +32,31 @@ import 'package:zione/features/agenda/infra/repositories/edit_card_repository.da
 import 'package:zione/features/agenda/infra/repositories/insert_card_repository.dart';
 import 'package:zione/features/agenda/infra/repositories/refresh_feed_repository.dart';
 import 'package:zione/features/agenda/ui/providers/feed_provider.dart';
+import 'package:zione/utils/enums.dart';
 
 class Inject {
-  static void init() {
+  static Future<void> init() async {
     GetIt getIt = GetIt.instance;
 
-    // servers
-    getIt.registerSingleton<ApiServerDataSource>(ApiServerDataSource());
+    await Hive.initFlutter();
+    Hive.registerAdapter(ResponseStatusAdapter());
+    Hive.registerAdapter(ResponseAdapter());
+    var box = await Hive.openBox('contentCacheBox');
+
+    // data
+    getIt.registerSingleton<IApiDatasource>(ApiServerDataSource());
+    getIt.registerSingleton<ICacheDatasource>(HiveDatasouce(box));
 
     // settings
     getIt.registerSingleton<Settings>(Settings());
 
     // datasources
     getIt.registerLazySingleton<ICloseCardDataSouce>(() => CloseCardDataSource(getIt()));
-    getIt.registerLazySingleton<IInsertCardDataSource>(() => InsertCardDataSource(getIt()));
+    getIt.registerLazySingleton<IInsertCardDataSource>(() => InsertCardDataSource(getIt(), getIt()));
+    /* getIt.registerLazySingleton<IInsertCardDataSource>(() => InsertCardDataSource(getIt(), getIt())); */
     getIt.registerLazySingleton<IEditCardDataSouce>(() => EditCardDataSource(getIt()));
     getIt.registerLazySingleton<IDeleteCardDataSouce>(() => DeleteCardDataSource(getIt()));
     getIt.registerLazySingleton<IRefreshFeedDataSouce>(() => RefreshFeedDataSource(getIt(), getIt(), getIt()));
-    getIt.registerLazySingleton<ICacheDatasource>(() => HiveDatasouce(Hive.box('contentCacheBox')));
 
     // repositories
     getIt.registerLazySingleton<ICloseCardRepository>(() => CloseCardRepository(getIt()));

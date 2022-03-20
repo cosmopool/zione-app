@@ -23,17 +23,29 @@ class Response implements IResponse {
   @override
   bool get isServerOffline => _offline;
 
-  Response(Map json) {
+  Response(
+      {required ResponseStatus status, required dynamic result, bool offline = false})
+      : _status = status,
+        _result = result,
+        _offline = offline;
+
+  Response.fromMap(Map json) {
     switch (json['Status']) {
-      case 'Success': _status = ResponseStatus.success; break;
-      case 'Error': _status = ResponseStatus.err; break;
-      default: _status = ResponseStatus.err; break;
+      case 'Success':
+        _status = ResponseStatus.success;
+        break;
+      case 'Error':
+        _status = ResponseStatus.err;
+        break;
+      default:
+        _status = ResponseStatus.err;
+        break;
     }
 
     if (json['Result'] != null) _result = json['Result'];
   }
 
-  Response.noConnection(){
+  Response.noConnection() {
     _status = ResponseStatus.err;
     _result = "No connection with remote server";
     _offline = true;

@@ -1,22 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
-import 'package:hive_flutter/hive_flutter.dart';
+import 'package:logging/logging.dart';
 import 'package:provider/provider.dart';
 import 'package:zione/features/agenda/ui/providers/feed_provider.dart';
 import 'package:zione/features/agenda/ui/screens/agenda_page.dart';
 
 import 'core/dependency_injection.dart';
-import 'utils/enums.dart';
-import 'features/agenda/data/datasources/rest_api_server/rest_api_response_model.dart';
 
 Future<void> main() async {
-  // TODO: try to use static method call to setup hive
-  await Hive.initFlutter();
-  Hive.registerAdapter(ResponseStatusAdapter());
-  Hive.registerAdapter(ResponseAdapter());
-  await Hive.openBox('contentCacheBox');
-  Inject.init();
+  await Inject.init();
+  Logger.root.level = Level.ALL; // defaults to Level.INFO
+  Logger.root.onRecord.listen((record) {
+    print('${record.level.name}: ${record.time}: ${record.message}');
+  });
+
   runApp(App());
 }
 

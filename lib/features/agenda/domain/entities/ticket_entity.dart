@@ -1,38 +1,53 @@
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:zione/features/agenda/domain/entities/entry_entity.dart';
 import 'package:zione/utils/enums.dart';
 
-class TicketEntity extends EntryEntity {
-  final Entry _type = Entry.ticket;
+part 'ticket_entity.g.dart';
+
+@HiveType(typeId: 3)
+class TicketEntity implements EntryEntity {
+  @HiveField(1)
   int _id = -1;
-  String clientName = "not initialized variable";
-  String clientPhone = "not initialized variable";
-  String clientAddress = "not initialized variable";
-  String serviceType = "not initialized variable";
-  String description = "not initialized variable";
+  @HiveField(2)
+  late String clientName;
+  @HiveField(3)
+  late String clientPhone;
+  @HiveField(4)
+  late String clientAddress;
+  @HiveField(5)
+  late String serviceType;
+  @HiveField(6)
+  late String description;
+  @HiveField(7)
   bool isFinished = false;
 
-  // TicketEntity(
-  //     {required this.clientName,
-  //     required this.clientPhone,
-  //     required this.clientAddress,
-  //     required this.serviceType,
-  //     required this.description});
+  TicketEntity(
+      {required this.clientName,
+      required this.clientPhone,
+      required this.clientAddress,
+      required this.serviceType,
+      required this.description});
 
-  TicketEntity(Map map) {
-    (map['id'] != null) ? _id = map['id'] as int : -1;
-    clientName = map['clientName'] as String;
-    clientPhone = map['clientPhone'] as String;
-    clientAddress = map['clientAddress'] as String;
-    serviceType = map['serviceType'] as String;
-    description = map['description'] as String;
-    (map['isFinished'] != null) ? isFinished = map['isFinished'] as bool : false;
+  TicketEntity.fromMap(Map map) {
+   if (map['id'] != null) _id = map['id'];
+   clientName = map['clientName'];
+   clientPhone = map['clientPhone'];
+   clientAddress = map['clientAddress'];
+   serviceType = map['serviceType'];
+   description = map['description'];
+   if (map['isFinished'] != null) isFinished = map['isFinished'];
   }
 
   @override
   int get id => _id;
 
   @override
-  Entry get type => _type;
+  Endpoint get endpoint => Endpoint.tickets;
+
+  @override
+  Entry get type => Entry.ticket;
+
+  set setProperty(String prop) => (prop == "Gustavo") ? clientName = prop : null;
 
   @override
   Map toMap() {

@@ -1,38 +1,33 @@
+import 'package:logging/logging.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
+
 import 'package:zione/features/agenda/domain/entities/ticket_entity.dart';
 import 'package:zione/features/agenda/ui/providers/feed_provider.dart';
 import 'package:zione/utils/enums.dart';
 
 import 'components/input_text.dart';
 
-class TicketForm extends StatefulWidget {
-  late String _clientName;
-  late String _clientPhone;
-  late String _clientAddress;
-  late String _serviceType;
-  late String _description;
+class AddTicketForm extends StatefulWidget {
 
-  TicketForm({Key? key}) : super(key: key);
+
+  AddTicketForm({Key? key}) : super(key: key);
 
   @override
-  _TicketFormState createState() => _TicketFormState();
+  _AddTicketFormState createState() => _AddTicketFormState();
 }
 
-class _TicketFormState extends State<TicketForm> {
+class _AddTicketFormState extends State<AddTicketForm> {
+  final log = Logger('AddAddTicketForm');
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  Map ticketMap = {};
 
-  // TODO: create basic input field widget to replace all _buildXXXXXX()
-  // function and make code more readble
-  Widget _buildClientName() {
-    const textType = TextInputType.text;
-    const label = 'Nome do cliente';
-
+  Widget _buildInput(String label, TextInputType inputType, valueToSave) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 7.5),
       child: TextFormField(
-        keyboardType: textType,
+        keyboardType: inputType,
         decoration: customInputDecoration(label),
         validator: (value) {
           if (value == null || value.isEmpty) {
@@ -41,96 +36,8 @@ class _TicketFormState extends State<TicketForm> {
         },
         onSaved: (value) {
           if (value != null) {
-            widget._clientName = value;
-          }
-        },
-      ),
-    );
-  }
-
-  Widget _buildClientPhone() {
-    const textType = TextInputType.phone;
-    const label = 'Telefone';
-
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 7.5),
-      child: TextFormField(
-        keyboardType: textType,
-        decoration: customInputDecoration(label),
-        validator: (value) {
-          if (value == null || value.isEmpty) {
-            return 'Preencha esse campo';
-          }
-        },
-        onSaved: (value) {
-          if (value != null) {
-            widget._clientPhone = value;
-          }
-        },
-      ),
-    );
-  }
-
-  Widget _buildClientAddress() {
-    const textType = TextInputType.text;
-    const label = 'Endereço';
-
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 7.5),
-      child: TextFormField(
-        keyboardType: textType,
-        decoration: customInputDecoration(label),
-        validator: (value) {
-          if (value == null || value.isEmpty) {
-            return 'Preencha esse campo';
-          }
-        },
-        onSaved: (value) {
-          if (value != null) {
-            widget._clientAddress = value;
-          }
-        },
-      ),
-    );
-  }
-
-  Widget _buildServiceType() {
-    const label = 'Tipo de Serviço';
-    const textType = TextInputType.text;
-
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 7.5),
-      child: TextFormField(
-        keyboardType: textType,
-        decoration: customInputDecoration(label),
-        validator: (value) {
-          if (value == null || value.isEmpty) {
-            return 'Preencha esse campo';
-          }
-        },
-        onSaved: (value) {
-          if (value != null) {
-            widget._serviceType = value;
-          }
-        },
-      ),
-    );
-  }
-
-  Widget _buildDescription() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 7.5),
-      child: TextFormField(
-        keyboardType: TextInputType.multiline,
-        decoration: customInputDecoration('Descrição'),
-        validator: (value) {
-          if (value == null || value.isEmpty) {
-            return 'Preencha esse campo';
-          }
-        },
-        onSaved: (value) {
-          if (value != null) {
-            widget._description = value;
+            /* valueToSave = value; */
+            ticketMap[valueToSave] = value;
           }
         },
       ),
@@ -138,19 +45,11 @@ class _TicketFormState extends State<TicketForm> {
   }
 
   void _addTicket() async {
-    Map<String, dynamic> ticket = {
-      'clientName': widget._clientName,
-      'clientPhone': widget._clientPhone,
-      'clientAddress': widget._clientAddress,
-      // 'clientAddressStreet': widget._clientAddressStreet,
-      // 'clientAddressNumber': widget._clientAddressNumber,
-      // 'clientAddressCity': widget._clientAddressCity,
-      // 'clientAddressRegion': widget._clientAddressRegion,
-      'serviceType': widget._serviceType,
-      'description': widget._description,
-    };
-    
-    context.read<FeedProvider>().insert(TicketEntity(ticket), Endpoint.tickets);
+    log.info("[ADD TICKET][FORM] preparing map to instantiate TicketEntity");
+    log.fine("[ADD TICKET][FORM] resulting map: $ticketMap");
+    final ticket = TicketEntity.fromMap(ticketMap);
+    log.fine("[ADD TICKET][FORM] TicketEntity instance to add: $ticket");
+    /* context.read<FeedProvider>().insert(ticket, Endpoint.tickets); */
   }
 
   @override
@@ -165,11 +64,14 @@ class _TicketFormState extends State<TicketForm> {
             title: Text('Adicionar Chamado'),
             leading: Icon(FontAwesomeIcons.times),
           ),
-          _buildClientName(),
-          _buildClientPhone(),
-          _buildClientAddress(),
-          _buildServiceType(),
-          _buildDescription(),
+          _buildInput("Nome do Cliente", TextInputType.text, "clientName"),
+          _buildInput("Telefone", TextInputType.phone, "clientPhone"),
+          _buildInput(
+              "Endereço do Cliente", TextInputType.text, "clientAddress"),
+          _buildInput(
+              "Tipo de Serviço", TextInputType.text, "serviceType"),
+          _buildInput(
+              "Descrição do Serviço", TextInputType.text, "description"),
           Column(
             crossAxisAlignment: CrossAxisAlignment.end,
             mainAxisAlignment: MainAxisAlignment.start,

@@ -47,7 +47,7 @@ class _AgendaPageState extends State<AgendaPage>
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => showBottomAutoSizeModal(
           context,
-          (_tabController.index == 0) ? EntryForm() : TicketForm(),
+          (_tabController.index == 0) ? EntryForm() : AddTicketForm(),
         ),
         label: (_tabController.index == 0)
             ? const Text('Agendamento')

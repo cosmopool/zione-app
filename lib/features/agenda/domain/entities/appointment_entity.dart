@@ -8,15 +8,14 @@ class AppointmentEntity extends EntryEntity {
   String duration = "not initialized variable";
   int ticketId = -1;
   bool isFinished = false;
-  final Entry _type = Entry.appointment;
 
   AppointmentEntity(Map response) {
-    _id = response['id'] as int;
+   if (response['id'] != null) _id = response['id'];
     date = response['date'] as String;
     time = response['time'] as String;
     duration = response['duration'] as String;
     ticketId = response['ticketId'] as int;
-    isFinished = response['isFinished'] as bool;
+   if (response['isFinished'] != null) isFinished = response['isFinished'];
 
     time = time.substring(0, 5);
     duration = duration.substring(0, 5);
@@ -26,7 +25,10 @@ class AppointmentEntity extends EntryEntity {
   int get id => _id;
 
   @override
-  Entry get type => _type;
+  Endpoint get endpoint => Endpoint.appointments;
+
+  @override
+  Entry get type => Entry.appointment;
 
   @override
   Map toMap() {
@@ -51,4 +53,5 @@ class AppointmentEntity extends EntryEntity {
     (map['ticketId'] != null) ? ticketId = map['ticketId'] : null;
     (map['isFinished'] != null) ? isFinished = map['isFinished'] : null;
   }
+
 }

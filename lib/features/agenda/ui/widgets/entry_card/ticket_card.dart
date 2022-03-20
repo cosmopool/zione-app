@@ -9,9 +9,9 @@ import 'package:zione/utils/enums.dart';
 import 'components/card_menu.dart';
 
 class TicketCard extends StatefulWidget {
-  final TicketEntity ticket;
+  TicketEntity ticket;
 
-  const TicketCard({Key? key, required this.ticket}) : super(key: key);
+  TicketCard({Key? key, required this.ticket}) : super(key: key);
 
   @override
   _TicketCardState createState() => _TicketCardState();
