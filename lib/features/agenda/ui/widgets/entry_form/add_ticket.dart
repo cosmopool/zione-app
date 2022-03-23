@@ -49,7 +49,7 @@ class _AddTicketFormState extends State<AddTicketForm> {
     log.fine("[ADD TICKET][FORM] resulting map: $ticketMap");
     final ticket = TicketEntity.fromMap(ticketMap);
     log.fine("[ADD TICKET][FORM] TicketEntity instance to add: $ticket");
-    /* context.read<FeedProvider>().insert(ticket, Endpoint.tickets); */
+    context.read<FeedProvider>().insert(ticket, Endpoint.tickets);
   }
 
   @override

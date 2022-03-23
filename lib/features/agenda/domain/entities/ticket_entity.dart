@@ -1,12 +1,10 @@
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:zione/features/agenda/domain/entities/entry_entity.dart';
-import 'package:zione/utils/enums.dart';
+import 'package:zione/core/utils/enums.dart';
 
 part 'ticket_entity.g.dart';
 
-@HiveType(typeId: 3)
-class TicketEntity implements EntryEntity {
-  @HiveField(1)
+@HiveType(typeId: 2)
+class TicketEntity {
   int _id = -1;
   @HiveField(2)
   late String clientName;
@@ -21,12 +19,15 @@ class TicketEntity implements EntryEntity {
   @HiveField(7)
   bool isFinished = false;
 
-  TicketEntity(
-      {required this.clientName,
+  TicketEntity({
+      id = -1,
+      required this.clientName,
       required this.clientPhone,
       required this.clientAddress,
       required this.serviceType,
-      required this.description});
+      required this.description,
+    this.isFinished = false,
+  }) : _id = id;
 
   TicketEntity.fromMap(Map map) {
    if (map['id'] != null) _id = map['id'];
@@ -38,18 +39,12 @@ class TicketEntity implements EntryEntity {
    if (map['isFinished'] != null) isFinished = map['isFinished'];
   }
 
-  @override
+  @HiveField(1)
   int get id => _id;
 
-  @override
+  @HiveField(8)
   Endpoint get endpoint => Endpoint.tickets;
 
-  @override
-  Entry get type => Entry.ticket;
-
-  set setProperty(String prop) => (prop == "Gustavo") ? clientName = prop : null;
-
-  @override
   Map toMap() {
     Map ticketToMap = {};
 
@@ -64,7 +59,6 @@ class TicketEntity implements EntryEntity {
     return ticketToMap;
   }
 
-  @override
   void edit(Map map) {
     (map['clientName'] != null) ? clientName = map['clientName'] : null;
     (map['clientPhone'] != null) ? clientPhone = map['clientPhone'] : null;

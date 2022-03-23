@@ -1,51 +1,48 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'ticket_entity.dart';
+part of 'appointment_entity.dart';
 
 // **************************************************************************
 // TypeAdapterGenerator
 // **************************************************************************
 
-class TicketEntityAdapter extends TypeAdapter<TicketEntity> {
+class AppointmentEntityAdapter extends TypeAdapter<AppointmentEntity> {
   @override
-  final int typeId = 2;
+  final int typeId = 1;
 
   @override
-  TicketEntity read(BinaryReader reader) {
+  AppointmentEntity read(BinaryReader reader) {
     final numOfFields = reader.readByte();
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return TicketEntity(
+    return AppointmentEntity(
       id: fields[1] as dynamic,
-      clientName: fields[2] as String,
-      clientPhone: fields[3] as String,
-      clientAddress: fields[4] as String,
-      serviceType: fields[5] as String,
-      description: fields[6] as String,
-      isFinished: fields[7] as bool,
+      date: fields[2] as String,
+      time: fields[3] as String,
+      duration: fields[4] as String,
+      ticketId: fields[5] as int,
+      isFinished: fields[6] as bool,
     );
   }
 
   @override
-  void write(BinaryWriter writer, TicketEntity obj) {
+  void write(BinaryWriter writer, AppointmentEntity obj) {
     writer
-      ..writeByte(8)
-      ..writeByte(2)
-      ..write(obj.clientName)
-      ..writeByte(3)
-      ..write(obj.clientPhone)
-      ..writeByte(4)
-      ..write(obj.clientAddress)
-      ..writeByte(5)
-      ..write(obj.serviceType)
-      ..writeByte(6)
-      ..write(obj.description)
       ..writeByte(7)
+      ..writeByte(2)
+      ..write(obj.date)
+      ..writeByte(3)
+      ..write(obj.time)
+      ..writeByte(4)
+      ..write(obj.duration)
+      ..writeByte(5)
+      ..write(obj.ticketId)
+      ..writeByte(6)
       ..write(obj.isFinished)
       ..writeByte(1)
       ..write(obj.id)
-      ..writeByte(8)
+      ..writeByte(7)
       ..write(obj.endpoint);
   }
 
@@ -55,7 +52,7 @@ class TicketEntityAdapter extends TypeAdapter<TicketEntity> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is TicketEntityAdapter &&
+      other is AppointmentEntityAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }
