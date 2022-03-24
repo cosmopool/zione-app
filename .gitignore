@@ -1,5 +1,9 @@
 ### Flutter Generated
 .envrc
+coverage/
+coverage.*
+linux/
+linux/*
 
 # Miscellaneous
 *.class
