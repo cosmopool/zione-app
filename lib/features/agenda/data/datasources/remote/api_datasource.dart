@@ -9,13 +9,33 @@ import 'package:zione/core/errors/api_errors.dart';
 import 'package:zione/core/errors/failures.dart';
 import 'package:zione/core/utils/constants.dart' as conf;
 import 'package:zione/core/utils/enums.dart';
-import 'package:zione/features/agenda/data/datasources/i_datasource.dart';
+import 'package:zione/features/agenda/data/datasources/remote/i_remote_datasource.dart';
 
-class ApiServerDataSource implements IDatasource {
+class ApiServerDataSource implements IRemoteDatasource {
   final log = Logger('ApiDatasource');
-  late Uri Function(String, String, [Map<String, dynamic>?]) uriMethod = Uri.https;
+  late Uri Function(String, String, [Map<String, dynamic>?]) uriMethod;
+  late Future<http.Response> Function(Uri, {Map<String, String>? headers})
+      httpGet;
+  late Future<http.Response> Function(Uri,
+      {Object? body,
+      Encoding? encoding,
+      Map<String, String>? headers}) httpPost;
+  late Future<http.Response> Function(Uri,
+      {Object? body,
+      Encoding? encoding,
+      Map<String, String>? headers}) httpDelete;
+  late Future<http.Response> Function(Uri,
+      {Object? body,
+      Encoding? encoding,
+      Map<String, String>? headers}) httpPatch;
 
-  ApiServerDataSource({required this.uriMethod});
+  ApiServerDataSource({
+    this.uriMethod = Uri.https,
+    this.httpGet = http.get,
+    this.httpPost = http.post,
+    this.httpDelete = http.delete,
+    this.httpPatch = http.patch,
+  });
 
   Map<String, String> _headers() {
     return {
@@ -25,56 +45,70 @@ class ApiServerDataSource implements IDatasource {
     };
   }
 
-  Future<Either<Failure, String>> authenticate(Map<String, String> credentials) async {
-    final url = uriMethod(conf.host, "/login");
-    log.info("[API][FETCH] initiating authentication on: $url");
-    final response = await http.post(
-      url,
-      headers: _headers(),
-      body: jsonEncode(credentials),
-    );
+  Future<Either<Failure, String>> authenticate(
+      Map<String, String> credentials) async {
+    try {
+      final url = uriMethod(conf.host, "/login");
+      log.info("[API][FETCH] initiating authentication on: $url");
+      final response = await httpPost(
+        url,
+        headers: _headers(),
+        body: jsonEncode(credentials),
+      );
 
-    final statusCode = response.statusCode;
-    final body = response.body;
-    final result = jsonDecode(body);
-    log.finest("[API][REQUEST] request sent to server: ${response.request}");
-    log.finest("[API][RESPONSE] response http code: $statusCode, body: $body");
+      final statusCode = response.statusCode;
+      final body = response.body;
+      final result = jsonDecode(body);
+      log.finest("[API][REQUEST] request sent to server: ${response.request}");
+      log.finest(
+          "[API][RESPONSE] response http code: $statusCode, body: $body");
 
-    log.info("[API][RESPONSE] converting response to [Failure] or [bool]");
-    if (result['Status'] == "Success") {
-      log.info("[API][RESPONSE] successful response");
-      final String res = result['Result'];
-      return right(res);
-    } else {
-      final error = convertApiMessageToError(result['Result']);
-      log.severe("[API][RESPONSE] response contains an error: $error");
-      return left(error);
+      log.info("[API][RESPONSE] converting response to [Failure] or [bool]");
+      if (result['Status'] == "Success") {
+        log.info("[API][RESPONSE] successful response");
+        final String res = result['Result'];
+        return right(res);
+      } else {
+        final error = convertApiMessageToError(result['Result']);
+        log.severe("[API][RESPONSE] response contains an error: $error");
+        return left(error);
+      }
+    } on SocketException {
+      return left(NoConnectionWithServer());
+    } catch (e) {
+      return left(ServerSideFailure());
     }
   }
 
   /// Fetch content from rest api
   @override
   Future<Either<Failure, List<Map>>> fetchContent(Endpoint endpoint) async {
-    final url = uriMethod(conf.host, "/${endpoint.name}");
-    log.info("[API][FETCH] Fetching content from: $url");
-    final response = await http.get(url, headers: _headers());
+    try {
+      final url = uriMethod(conf.host, "/${endpoint.name}");
+      log.info("[API][FETCH] Fetching content from: $url");
+      final response = await httpGet(url, headers: _headers());
 
-    final statusCode = response.statusCode;
-    final body = response.body;
-    final result = jsonDecode(body);
-    log.finest("[API][REQUEST] request sent to server: ${response.request}");
-    log.finest("[API][RESPONSE] http code: $statusCode, body: $body");
-    /* print("[API][RESPONSE] http code: $statusCode, body: $body"); */
-    log.info("[API][RESPONSE] converting response to [Failure] or [bool]");
+      final statusCode = response.statusCode;
+      final body = response.body;
+      final result = jsonDecode(body);
+      log.finest("[API][REQUEST] request sent to server: ${response.request}");
+      log.finest("[API][RESPONSE] http code: $statusCode, body: $body");
+      /* print("[API][RESPONSE] http code: $statusCode, body: $body"); */
+      log.info("[API][RESPONSE] converting response to [Failure] or [bool]");
 
-    if (result['Status'] == "Success") {
-      log.info("[API][RESPONSE] successful response");
-      final res = List<Map>.from(result['Result']);
-      return right(res);
-    } else {
-      final error = convertApiMessageToError(result['Result']);
-      log.severe("[API][RESPONSE] response contains an error: $error");
-      return left(error);
+      if (result['Status'] == "Success") {
+        log.info("[API][RESPONSE] successful response");
+        final res = List<Map>.from(result['Result']);
+        return right(res);
+      } else {
+        final error = convertApiMessageToError(result['Result']);
+        log.severe("[API][RESPONSE] response contains an error: $error");
+        return left(error);
+      }
+    } on SocketException {
+      return left(NoConnectionWithServer());
+    } catch (e) {
+      return left(ServerSideFailure());
     }
   }
 
@@ -86,7 +120,7 @@ class ApiServerDataSource implements IDatasource {
       final url = uriMethod(conf.host, "/${endpoint.name}");
       log.info("[API][POST] Trying to post on server: $url");
 
-      final response = await http.post(
+      final response = await httpPost(
         url,
         headers: _headers(),
         body: jsonEncode(content),
@@ -104,7 +138,7 @@ class ApiServerDataSource implements IDatasource {
       final url = uriMethod(conf.host, "/${endpoint.name}/${content['id']}");
       log.info("[API][PATCH] trying to patch on server: $url");
 
-      final response = await http.patch(
+      final response = await httpPatch(
         url,
         headers: _headers(),
         body: jsonEncode(content),
@@ -125,7 +159,7 @@ class ApiServerDataSource implements IDatasource {
       );
       log.info("[API][POST] Trying to post to close on server: $url");
 
-      final response = await http.post(
+      final response = await httpPost(
         url,
         headers: _headers(),
         body: jsonEncode(content),
@@ -143,7 +177,7 @@ class ApiServerDataSource implements IDatasource {
       final url = uriMethod(conf.host, "/${endpoint.name}/${content['id']}");
       log.info("[API][PATCH] Trying to delete on server: $url");
 
-      final response = await http.delete(
+      final response = await httpDelete(
         url,
         headers: _headers(),
         body: jsonEncode(content),
@@ -166,7 +200,8 @@ class ApiServerDataSource implements IDatasource {
       log.info("[API][RESPONSE] successful response");
       return right(true);
     } else {
-      final error = convertApiMessageToError(result['Result'] ?? "UnformattedResponse");
+      final error =
+          convertApiMessageToError(result['Result'] ?? "UnformattedResponse");
       log.severe("[API][RESPONSE] response contains an error: $error");
       return left(error);
     }
@@ -190,25 +225,6 @@ class ApiServerDataSource implements IDatasource {
     if (apiError.contains("GenericError")) return ServerSideFailure();
     if (apiError.contains("One or more error occured: ")) return ServerSideFailure();
     return ServerSideFailure();
-    /* switch (apiError) { */
-    /*   case "GenericError": */
-    /*     return left(ServerSideFailure()); */
-    /**/
-    /*   case "MissingFieldError": */
-    /*     return left(MissingFieldError()); */
-    /*    */
-    /*   case "DatabaseError": */
-    /*     return left(DatabaseError()); */
-    /**/
-    /*   case "InvalidValueError": */
-    /*     return left(InvalidValueError()); */
-    /**/
-    /*   case "ValidationError": */
-    /*     return left(ValidationError()); */
-    /**/
-    /*   default: */
-    /*     return left(ServerSideFailure()); */
-    /* } */
   }
 
   /// Handle errors from request to api
@@ -224,7 +240,7 @@ class ApiServerDataSource implements IDatasource {
   ///
   /// // This snipet is an exemple of [apiRequest] argument with aditional cache logic:
   /// ```dart
-  /// final response = await http.post(endpoint, json);
+  /// final response = await httpPost(endpoint, json);
   ///
   /// if (response.status == Status.success) {
   ///   await cache.save(endpoint, json);

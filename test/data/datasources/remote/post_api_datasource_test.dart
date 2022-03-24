@@ -4,14 +4,14 @@ import 'package:zione/core/auth.dart';
 import 'package:zione/core/errors/api_errors.dart';
 import 'package:zione/core/utils/constants.dart';
 import 'package:zione/core/utils/enums.dart';
-import 'package:zione/features/agenda/data/datasources/i_datasource.dart';
 import 'package:zione/features/agenda/data/datasources/remote/api_datasource.dart';
+import 'package:zione/features/agenda/data/datasources/remote/i_remote_datasource.dart';
 
 import '../../../stubs/ticket_list_stubs.dart';
 
 void main() async {
   const tkEndpoint = Endpoint.tickets;
-  late IDatasource api;
+  late IRemoteDatasource api;
 
   setUp(() async {
     host = "0.0.0.0";

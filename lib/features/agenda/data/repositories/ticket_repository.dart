@@ -1,5 +1,8 @@
 import 'package:dartz/dartz.dart';
+import 'package:zione/core/errors/cache_errors.dart';
 import 'package:zione/core/errors/failures.dart';
+import 'package:zione/core/settings.dart';
+import 'package:zione/core/utils/enums.dart';
 import 'package:zione/features/agenda/data/datasources/local/i_local_datasource.dart';
 import 'package:zione/features/agenda/data/datasources/remote/i_remote_datasource.dart';
 import 'package:zione/features/agenda/domain/entities/ticket_entity.dart';
@@ -8,105 +11,154 @@ import 'package:zione/features/agenda/domain/repositories/i_ticket_repository.da
 class TicketRepository implements ITicketRepository<bool, TicketEntity> {
   final IRemoteDatasource _api;
   final ILocalDatasource _cache;
+  final ISettings _settings;
+  final endpoint = Endpoint.tickets;
+  DateTime _lastFetch = DateTime.utc(1989, DateTime.november, 9);
+  int _tryCount = 0;
 
-  TicketRepository(this._api, this._cache);
+  TicketRepository({
+    required api,
+    required cache,
+    required settings,
+  })  : _api = api,
+        _cache = cache,
+        _settings = settings;
 
-  /// Close a open ticket
-  @override
-  Future<Either<Failure, List<Map>>> fetch(TicketEntity tk) async {
-    late Failure failure;
+  /// Fetch content from cache
+  Future<Either<Failure, List<Map>>> _fetchContentFromCache(
+      int count, Failure? failure) async {
     late List<Map> result;
 
-    final response = await _api.fetchContent(tk.endpoint);
-    response.fold((l) => failure = l, (r) => result = r);
-
-    if (response.isRight()) {
-      await _cache.postContentList(tk.endpoint, result);
-      return right(result);
+    if (count <= 0 && failure != null) {
+      return Left(failure);
+    } else {
+      count--;
+      final response = await _cache.fetchContent(endpoint);
+      response.fold((l) => null, (r) => result = r);
+      return response.isRight()
+          ? Right(result)
+          : await _api.fetchContent(endpoint);
     }
-    // TODO: implement QueueRequestUsecase
-    /* await QueueRequestUsecase(CloseTicketUsecase, tk); */
-    return left(failure);
+  }
+
+  /// Set [_tryCount] to it's default value if is less then or equal 0
+  Future<void> _setTryCount() async => _tryCount =
+      _tryCount <= 0 ? await _settings.tryReconnectCount : _tryCount;
+
+  /// Fetch all open tickets
+  @override
+  Future<Either<Failure, List<Map>>> fetch() async {
+    late Failure failure;
+    late List<Map> result;
+    await _setTryCount();
+
+    final lastFetchInMinutes = DateTime.now().difference(_lastFetch).inMinutes;
+
+    if (lastFetchInMinutes > await _settings.remoteApiRefreshTimeMinutes) {
+      final response = await _api.fetchContent(endpoint);
+      response.fold((l) => failure = l, (r) => result = r);
+
+      if (response.isRight()) {
+        _lastFetch = DateTime.now();
+        await _cache.postContentList(endpoint, result);
+        return Right(result);
+      } else {
+        return _fetchContentFromCache(_tryCount, failure);
+      }
+    } else {
+      // TODO: implement QueueRequestUsecase
+      /* await QueueRequestUsecase(CloseTicketUsecase, tk); */
+      return _fetchContentFromCache(_tryCount, null);
+    }
   }
 
   /// Close a open ticket
   @override
   Future<Either<Failure, bool>> close(TicketEntity tk) async {
     late Failure failure;
-    bool result = false;
 
-    final response = await _api.closeContent(tk.endpoint, tk.toMap());
-    response.fold((l) => failure = l, (r) => result = r);
+    final response = await _api.closeContent(endpoint, tk.toMap());
+    response.fold((l) => failure = l, (r) => null);
 
     if (response.isRight()) {
-      final cacheRes = await _cache.closeContent(tk.endpoint, tk.toMap());
-      cacheRes.fold((l) => failure = l, (r) => result = r);
-      if (cacheRes.isRight()) {
-        return right(result);
-      }
+      return await _cache.closeContent(endpoint, tk.toMap());
     }
     // TODO: implement QueueRequestUsecase
     /* await QueueRequestUsecase(CloseTicketUsecase, tk); */
-    return left(failure);
+    return Left(failure);
   }
 
   @override
   Future<Either<Failure, bool>> delete(TicketEntity tk) async {
     late Failure failure;
-    bool result = false;
 
-    final response = await _api.deleteContent(tk.endpoint, tk.toMap());
-    response.fold((l) => failure = l, (r) => result = r);
+    final response = await _api.deleteContent(endpoint, tk.toMap());
+    response.fold((l) => failure = l, (r) => null);
 
+    /* final idIsValid = await validateId(tk.id); */
+    /* idIsValid.fold((l) => failure = l, (r) => null); */
+    /**/
+    /* if (response.isRight() && idIsValid.isRight()) { */
     if (response.isRight()) {
-      final cacheRes = await _cache.deleteContent(tk.endpoint, tk.toMap());
-      cacheRes.fold((l) => failure = l, (r) => result = r);
-      if (cacheRes.isRight()) {
-        return right(result);
-      }
+      return await _cache.deleteContent(endpoint, tk.toMap());
     }
     // TODO: implement QueueRequestUsecase
     /* await QueueRequestUsecase(CloseTicketUsecase, tk); */
-    return left(failure);
+    return Left(failure);
   }
 
   @override
   Future<Either<Failure, bool>> edit(TicketEntity tk) async {
     late Failure failure;
-    bool result = false;
 
-    final response = await _api.updateContent(tk.endpoint, tk.toMap());
-    response.fold((l) => failure = l, (r) => result = r);
+    final response = await _api.updateContent(endpoint, tk.toMap());
+    response.fold((l) => failure = l, (r) => null);
 
+    /* final idIsValid = await validateId(tk.id); */
+    /* idIsValid.fold((l) => failure = l, (r) => null); */
+
+    /* if (response.isRight() && idIsValid.isRight()) { */
     if (response.isRight()) {
-      final cacheRes = await _cache.updateContent(tk.endpoint, tk.toMap());
-      cacheRes.fold((l) => failure = l, (r) => result = r);
-      if (cacheRes.isRight()) {
-        return right(result);
-      }
+      return await _cache.updateContent(endpoint, tk.toMap());
     }
     // TODO: implement QueueRequestUsecase
     /* await QueueRequestUsecase(CloseTicketUsecase, tk); */
-    return left(failure);
+    return Left(failure);
   }
 
   @override
   Future<Either<Failure, bool>> insert(TicketEntity tk) async {
     late Failure failure;
-    bool result = false;
 
-    final response = await _api.postContent(tk.endpoint, tk.toMap());
-    response.fold((l) => failure = l, (r) => result = r);
+    final response = await _api.postContent(endpoint, tk.toMap());
+    response.fold((l) => failure = l, (r) => null);
 
     if (response.isRight()) {
-      final cacheRes = await _cache.postContent(tk.endpoint, tk.toMap());
-      cacheRes.fold((l) => failure = l, (r) => result = r);
-      if (cacheRes.isRight()) {
-        return right(result);
-      }
+      return await _cache.postContent(endpoint, tk.toMap());
     }
     // TODO: implement QueueRequestUsecase
     /* await QueueRequestUsecase(postTicketUsecase, tk); */
-    return left(failure);
+    return Left(failure);
+  }
+
+  Future<Either<Failure, bool>> validateId(int? id) async {
+    late final List<Map> contentList;
+    late final Failure failure;
+
+    /* final int _id = int.parse(id ?? -1); */
+    final int _id = id ?? -1;
+    final list = await _cache.fetchContent(endpoint);
+    list.fold((l) => failure = l, (r) => contentList = r);
+
+    if (_id < 0) {
+      return left(InvalidValue("{'id': $_id}"));
+    } else if (list.isRight() && _id > -1 && _id >= contentList.length) {
+      return left(EntryNotFound("{'id': $_id}"));
+    } else if (list.isLeft()) {
+      /* return left(EntryNotFound("{'id': $_id}")); */
+      return left(failure);
+    } else {
+      return right(true);
+    }
   }
 }

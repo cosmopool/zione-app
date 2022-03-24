@@ -44,6 +44,17 @@ class NotAbleToSaveContent extends Failure {
   List<Object?> get props => [];
 }
 
+class InvalidValue extends Failure {
+  late final String _msg;
+  InvalidValue(this._msg);
+
+  @override
+  String get message => "One or more field with invalid values: $_msg";
+
+  @override
+  List<Object?> get props => [message];
+}
+
 class EmptyResponseFromCache extends Failure {
   @override
   String get message => "Empty response from cache";

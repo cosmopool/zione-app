@@ -10,19 +10,25 @@ class TicketRepositoryMock implements ITicketRepository<bool, TicketEntity> {
   }
 
   @override
-  Future<Either<Failure, bool>> delete(TicketEntity tk) async {
+  Future<Either<Failure, bool>> delete(TicketEntity tk) {
+    // TODO: implement delete
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<Either<Failure, bool>> edit(TicketEntity tk) {
     // TODO: implement edit
     throw UnimplementedError();
   }
 
   @override
-  Future<Either<Failure, bool>> edit(TicketEntity tk) async {
-    // TODO: implement edit
+  Future<Either<Failure, List<Map>>> fetch() {
+    // TODO: implement fetch
     throw UnimplementedError();
   }
 
   @override
-  Future<Either<Failure, bool>> insert(TicketEntity tk) async {
+  Future<Either<Failure, bool>> insert(TicketEntity tk) {
     // TODO: implement insert
     throw UnimplementedError();
   }

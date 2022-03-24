@@ -8,5 +8,5 @@ abstract class ILocalDatasource {
   Future<Either<Failure, bool>> updateContent(Endpoint endpoint, Map content);
   Future<Either<Failure, bool>> closeContent(Endpoint endpoint, Map content);
   Future<Either<Failure, bool>> deleteContent(Endpoint endpoint, Map content);
-  Future<void> postContentList(Endpoint endpoint, List<Map> content);
+  Future<void> postContentList(Endpoint endpoint, List<Map> contentList);
 }

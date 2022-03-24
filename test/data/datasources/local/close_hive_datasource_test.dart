@@ -4,15 +4,15 @@ import 'package:hive/hive.dart';
 import 'package:hive_test/hive_test.dart';
 import 'package:zione/core/errors/cache_errors.dart';
 import 'package:zione/core/utils/enums.dart';
-import 'package:zione/features/agenda/data/datasources/i_datasource.dart';
 import 'package:zione/features/agenda/data/datasources/local/hive_datasouce.dart';
+import 'package:zione/features/agenda/data/datasources/local/i_local_datasource.dart';
 
 import '../../../stubs/ticket_list_stubs.dart';
 
 void main() async {
   const tkEndpoint = Endpoint.tickets;
   late Box box;
-  late IDatasource cache;
+  late ILocalDatasource cache;
 
   setUp(() async {
     await setUpTestHive();

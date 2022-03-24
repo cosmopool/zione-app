@@ -44,10 +44,17 @@ class HiveDatasouce extends ILocalDatasource {
   @override
   Future<Either<Failure, bool>> deleteContent(
       Endpoint endpoint, Map content) async {
-    Future<Either<Failure, bool>> _deleteContent(List<Map> contentList) async {
-      final didRemove = contentList.remove(content);
-      log.fine("[CACHE][DELETE] did remove: $didRemove");
+    return handleFetchErrors(endpoint, (contentList) async {
+      bool didRemove = false;
 
+      for (Map entry in contentList) {
+        if (entry['id'] == content['id']) {
+          didRemove = contentList.remove(entry);
+          break;
+        }
+      }
+
+      log.fine("[CACHE][DELETE] did remove: $didRemove");
       log.finest("[CACHE][DELETE] saving current list: $contentList");
       if (didRemove) {
         postContentList(endpoint, contentList);
@@ -56,9 +63,7 @@ class HiveDatasouce extends ILocalDatasource {
         log.severe("[CACHE][DELTE] could not found entry given: $content");
         return left(EntryNotFound("{id: $id}"));
       }
-    }
-
-    return handleFetchErrors(endpoint, (list) => _deleteContent(list));
+    });
   }
 
   @override
@@ -85,26 +90,38 @@ class HiveDatasouce extends ILocalDatasource {
   @override
   Future<Either<Failure, bool>> updateContent(
       Endpoint endpoint, Map content) async {
-    log.info("[CACHE][UPTADE] posting saving in: ${endpoint.name} box");
-    log.finer("[CACHE][UPTADE] entry to save: $content");
+    Future<Either<Failure, bool>> _updateContent(List<Map> contentList) async {
+      log.info("[CACHE][UPTADE] posting saving in: ${endpoint.name} box");
+      log.finer("[CACHE][UPTADE] entry to save: $content");
+      bool found = false;
 
-    List<Map>? contentList = await _box.get(endpoint.name);
-    log.info("[CACHE][UPTADE] updating new content on list");
-    contentList?.forEach((element) {
-      if (element['id'] == content['id']) element = content;
-    });
+      final index =
+          contentList.indexWhere((entry) => entry['id'] == content['id']);
+      if (index >= 0 && index < contentList.length) {
+        found = true;
+        contentList[index] = content;
+      }
 
-    log.info("[CACHE][UPTADE] updating new content on list");
-    await _box.put(endpoint.name, contentList ?? [content]);
+      log.info("[CACHE][UPTADE] updating new content on list");
+      await postContentList(endpoint, contentList);
 
-    log.info("[CACHE][UPTADE] checking if value was saved");
-    List<Map>? newContentList = await _box.get(endpoint.name);
+      log.info("[CACHE][UPTADE] checking if value was saved");
+      final newContentList = await _box.get(endpoint.name, defaultValue: [{}]);
 
-    if (newContentList != null && newContentList.contains(content)) {
-      return right(true);
-    } else {
-      return left(NotAbleToUpdateContent());
+      log.finest("[CACHE][UPTADE] saving current list: $contentList");
+      if (newContentList.contains(content) && found == true) {
+        await postContentList(endpoint, contentList);
+        return right(true);
+      } else if (found == false) {
+        log.severe("[CACHE][UPTADE] could not found entry given: $content");
+        return left(EntryNotFound("{id: $id}"));
+      } else {
+        log.severe("[CACHE][UPTADE] could not save updated entry");
+        return left(NotAbleToUpdateContent());
+      }
     }
+
+    return handleFetchErrors(endpoint, (list) => _updateContent(list));
   }
 
   @override
@@ -125,7 +142,6 @@ class HiveDatasouce extends ILocalDatasource {
     if (failure == null) {
       log.finest("[CACHE][FETCH] content list: $contentList");
       return await callback(contentList);
-
     } else {
       log.severe(
           "[CACHE][FETCH] error occurred when fetching content from cache $failure");
