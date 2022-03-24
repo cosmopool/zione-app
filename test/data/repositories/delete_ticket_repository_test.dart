@@ -21,7 +21,8 @@ void main() async {
   late TicketRepository repo;
   late ILocalDatasource cache;
   final api = RemoteDatasouceStub();
-  Map tk = ticketListStub[0];
+  final list = ticketListStub;
+  Map tk = list[0];
 
   setUp(() async {
     await setUpTestHive();
@@ -36,46 +37,54 @@ void main() async {
     tk['clientName'] = "Success";
     await repo.fetch();
     final _tk = TicketEntity.fromMap(tk);
-    final response = await repo.close(_tk);
+    final response = await repo.delete(_tk);
     expect(response, right(true));
   });
 
-  test('should return EmptyResponseFromCache when trying to close with no tickets on cache', () async {
+  test('should return EmptyResponseFromCache when trying to delete with no tickets on cache', () async {
     tk['clientName'] = "Success";
     await box.put(Endpoint.tickets.name, [{}]);
     final _tk = TicketEntity.fromMap(tk);
-    final response = await repo.close(_tk);
+    final response = await repo.delete(_tk);
     expect(response, left(EntryNotFound("")));
   });
 
   test('should return CouldNotFinishRequest on server response status == error', () async {
     tk['clientName'] = "Error";
     final _tk = TicketEntity.fromMap(tk);
-    final response = await repo.close(_tk);
+    final response = await repo.delete(_tk);
     expect(response, left(ServerSideFailure()));
   });
 
   test('should return NoConnectionWithServer on socket exception', () async {
     tk['clientName'] = "NoConnection";
     final _tk = TicketEntity.fromMap(tk);
-    final response = await repo.close(_tk);
+    final response = await repo.delete(_tk);
     expect(response, left(NoConnectionWithServer()));
   });
 
   test('should return ServerSideFailure on generic error', () async {
     tk['clientName'] = "ServerSide";
     final _tk = TicketEntity.fromMap(tk);
-    final response = await repo.close(_tk);
+    final response = await repo.delete(_tk);
     expect(response, left(ServerSideFailure()));
   });
 
-  test('should save successful api close on cache', () async {
-    tk['clientName'] = "Success";
+  test('should save successful api delete on cache', () async {
     await repo.fetch();
-    final _tk = TicketEntity.fromMap(tk);
-    final response = await repo.close(_tk);
-    final cacheList = await box.get(Endpoint.tickets.name);
+    final _tk = TicketEntity.fromMap(ticketListStub[1]);
+    final response = await repo.delete(_tk);
+
+    final List<Map> cacheList = await box.get(Endpoint.tickets.name);
     expect(response, right(true));
     expect(cacheList, ticketListStub);
   });
+
+  /* test('should return EntryNotFound when entry with given id is not on cache', () async { */
+  /*   await box.put(Endpoint.tickets.name, ticketListStub); */
+  /*   tk['id'] = 101; */
+  /*   final _tk = TicketEntity.fromMap(tk); */
+  /*   final response = await repo.delete(_tk); */
+  /*   expect(response, left(EntryNotFound(""))); */
+  /* }); */
 }

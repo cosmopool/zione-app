@@ -3,7 +3,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_test/hive_test.dart';
 import 'package:zione/core/errors/api_errors.dart';
-import 'package:zione/core/errors/cache_errors.dart';
 import 'package:zione/core/settings.dart';
 import 'package:zione/core/utils/enums.dart';
 import 'package:zione/features/agenda/data/datasources/local/hive_datasouce.dart';
@@ -36,46 +35,41 @@ void main() async {
     tk['clientName'] = "Success";
     await repo.fetch();
     final _tk = TicketEntity.fromMap(tk);
-    final response = await repo.close(_tk);
+    final response = await repo.insert(_tk);
     expect(response, right(true));
-  });
-
-  test('should return EmptyResponseFromCache when trying to close with no tickets on cache', () async {
-    tk['clientName'] = "Success";
-    await box.put(Endpoint.tickets.name, [{}]);
-    final _tk = TicketEntity.fromMap(tk);
-    final response = await repo.close(_tk);
-    expect(response, left(EntryNotFound("")));
   });
 
   test('should return CouldNotFinishRequest on server response status == error', () async {
     tk['clientName'] = "Error";
     final _tk = TicketEntity.fromMap(tk);
-    final response = await repo.close(_tk);
+    final response = await repo.insert(_tk);
     expect(response, left(ServerSideFailure()));
   });
 
   test('should return NoConnectionWithServer on socket exception', () async {
     tk['clientName'] = "NoConnection";
     final _tk = TicketEntity.fromMap(tk);
-    final response = await repo.close(_tk);
+    final response = await repo.insert(_tk);
     expect(response, left(NoConnectionWithServer()));
   });
 
   test('should return ServerSideFailure on generic error', () async {
     tk['clientName'] = "ServerSide";
     final _tk = TicketEntity.fromMap(tk);
-    final response = await repo.close(_tk);
+    final response = await repo.insert(_tk);
     expect(response, left(ServerSideFailure()));
   });
 
-  test('should save successful api close on cache', () async {
+  test('should save successful api insert on cache', () async {
     tk['clientName'] = "Success";
-    await repo.fetch();
     final _tk = TicketEntity.fromMap(tk);
-    final response = await repo.close(_tk);
+    final response = await repo.insert(_tk);
     final cacheList = await box.get(Endpoint.tickets.name);
     expect(response, right(true));
-    expect(cacheList, ticketListStub);
+    expect(cacheList, [_tk.toMap()]);
+  });
+
+  tearDown(() async {
+    await tearDownTestHive();
   });
 }

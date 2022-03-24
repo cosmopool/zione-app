@@ -2,12 +2,12 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:zione/core/auth.dart';
 import 'package:zione/core/utils/constants.dart';
 import 'package:zione/core/utils/enums.dart';
-import 'package:zione/features/agenda/data/datasources/i_datasource.dart';
 import 'package:zione/features/agenda/data/datasources/remote/api_datasource.dart';
+import 'package:zione/features/agenda/data/datasources/remote/i_remote_datasource.dart';
 
 void main() async {
   const tkEndpoint = Endpoint.tickets;
-  late IDatasource api;
+  late IRemoteDatasource api;
 
   setUp(() async {
     host = "0.0.0.0";
@@ -29,11 +29,7 @@ void main() async {
     };
     final res = await api.fetchContent(tkEndpoint);
     res.fold((l) => null, (r) => result = r);
-    expect(result[0], tkRes);
+    /* expect(result.contains(tkRes), true); */
+    expect(result.toString(), contains(tkRes.toString()));
   });
-
-  /* test('should return EmptyResponseFromapi when box is empty', () async { */
-  /*   final res = await api.fetchContent(tkEndpoint); */
-  /*   expect(res, left(EmptyResponseFromapi())); */
-  /* }); */
 }

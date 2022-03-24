@@ -60,6 +60,14 @@ class ServerSideFailure extends Failure {
   List<Object?> get props => [];
 }
 
+class NoResponseFromAnyDatasource extends Failure {
+  @override
+  String get message => "Couldn't get any response from api or cache";
+
+  @override
+  List<Object?> get props => [];
+}
+
 class NoConnectionWithServer extends Failure {
   @override
   String get message => "No connection with server";
