@@ -1,8 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 import 'package:zione/app/modules/core/utils/enums.dart';
-
-part 'appointment_entity.g.dart';
 
 class AppointmentEntity extends Equatable {
   late int _id;

@@ -1,22 +1,12 @@
-import 'package:hive_flutter/hive_flutter.dart';
 import 'package:zione/app/modules/core/utils/enums.dart';
 
-part 'ticket_entity.g.dart';
-
-@HiveType(typeId: 2)
 class TicketEntity {
   int _id = -1;
-  @HiveField(2)
   late String clientName;
-  @HiveField(3)
   late String clientPhone;
-  @HiveField(4)
   late String clientAddress;
-  @HiveField(5)
   late String serviceType;
-  @HiveField(6)
   late String description;
-  @HiveField(7)
   bool isFinished = false;
 
   TicketEntity({
@@ -39,10 +29,8 @@ class TicketEntity {
    if (map['isFinished'] != null) isFinished = map['isFinished'];
   }
 
-  @HiveField(1)
   int get id => _id;
 
-  @HiveField(8)
   Endpoint get endpoint => Endpoint.tickets;
 
   Map toMap() {
