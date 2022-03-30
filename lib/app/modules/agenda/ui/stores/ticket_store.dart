@@ -1,10 +1,10 @@
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:logging/logging.dart';
+import 'package:zione/app/modules/agenda/domain/usecases/fetch_tickets_usecase.dart';
 import 'package:zione/app/modules/core/errors/api_errors.dart';
 import 'package:flutter_triple/flutter_triple.dart';
 import 'package:zione/app/modules/agenda/data/mappers/ticket_mapper.dart';
 import 'package:zione/app/modules/agenda/domain/entities/ticket_entity.dart';
-import 'package:zione/app/modules/agenda/domain/usecases/fetch_tickets.dart';
 import 'package:zione/app/modules/core/errors/failures.dart';
 
 class TicketStore extends NotifierStore<Failure, List<TicketEntity>> {
@@ -16,8 +16,6 @@ class TicketStore extends NotifierStore<Failure, List<TicketEntity>> {
   Future<void> fetch() async {
     log.info("[FEED][STORE] -- FETCHING TICKETS...");
     setLoading(true);
-
-    /* executeEither(() => CustomEitherAdapter.adapter(_usecase())); */
 
     final list = await _usecase();
     list.fold((failure) {
