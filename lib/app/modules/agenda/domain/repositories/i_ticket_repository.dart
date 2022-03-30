@@ -1,5 +1,5 @@
-
 import 'package:dartz/dartz.dart';
+import 'package:zione/app/modules/agenda/domain/entities/ticket_entity.dart';
 import 'package:zione/app/modules/core/errors/failures.dart';
 
 abstract class ITicketRepository<bool, TicketEntity> {

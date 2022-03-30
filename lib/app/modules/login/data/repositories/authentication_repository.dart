@@ -1,13 +1,13 @@
 import 'package:dartz/dartz.dart';
 import 'package:zione/app/modules/core/errors/failures.dart';
-import 'package:zione/app/modules/login/data/datasources/local/hive_datasouce.dart';
-import 'package:zione/app/modules/login/data/datasources/remote/api_datasource.dart';
+import 'package:zione/app/modules/login/data/datasources/local/i_local_datasouce.dart';
+import 'package:zione/app/modules/login/data/datasources/remote/i_api_datasource.dart';
 import 'package:zione/app/modules/login/domain/entities/user_entity.dart';
 import 'package:zione/app/modules/login/domain/repositories/i_authentication_repository.dart';
 
 class AuthenticationRepository implements IAuthenticationRepository {
-  final ApiAuthDatasource _api;
-  final HiveAuthDatasource _cache;
+  final IApiAuthDatasource _api;
+  final ILocalAuthDatasource _cache;
   AuthenticationRepository(this._api, this._cache);
   
   @override

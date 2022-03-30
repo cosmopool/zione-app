@@ -2,6 +2,7 @@
 .envrc
 coverage/
 coverage.*
+codecov*
 linux/
 linux/*
 

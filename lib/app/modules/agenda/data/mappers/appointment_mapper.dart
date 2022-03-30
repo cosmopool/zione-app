@@ -14,24 +14,28 @@ class AppointmentMapper {
   static String toJson(AppointmentEntity entity) => json.encode(toMap(entity));
 
   static AppointmentEntity fromMap(Map json) {
-    final date = json["date"] as String;
-    final time = json["time"] as String;
+    /* final date = json["date"] as String; */
+    /* final time = json["time"] as String; */
 
     return AppointmentEntity(
       id: json["id"] ?? -1,
-      dateTime: DateTime.parse("$date $time"),
+      /* dateTime: DateTime.parse("$date $time"), */
+      date: json["date"] as String,
+      time: json["time"] as String,
       duration: json["duration"] as String,
-      ticketId: json["ticketId"] as int,
+      ticketId: json["ticketId"] ?? -1,
       isFinished: json["isFinished"] ?? false,
     );
   }
 
   static Map toMap(AppointmentEntity entity) {
-    final dt = entity.dateTime;
+    /* final dt = entity.dateTime; */
     return {
       "id": entity.id,
-      "date": "${dt.year}/${dt.month}/${dt.day}",
-      "time": "${dt.hour}:${dt.minute}",
+      /* "date": "${dt.year}/${dt.month}/${dt.day}", */
+      /* "time": "${dt.hour}:${dt.minute}", */
+      "date": entity.date,
+      "time": entity.time,
       "duration": entity.duration,
       "ticketId": entity.ticketId,
       "isFinished": entity.isFinished,

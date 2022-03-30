@@ -2,11 +2,11 @@ import 'package:dartz/dartz.dart';
 import 'package:logging/logging.dart';
 import 'package:zione/app/modules/core/errors/failures.dart';
 import 'package:zione/app/modules/core/usecase/i_usecase.dart';
-import 'package:zione/app/modules/login/data/repositories/authentication_repository.dart';
 import 'package:zione/app/modules/login/domain/entities/user_entity.dart';
+import 'package:zione/app/modules/login/domain/repositories/i_authentication_repository.dart';
 
 class LoginUsecase implements IUsecase<bool, UserEntity> {
-  final AuthenticationRepository _repo;
+  final IAuthenticationRepository _repo;
   LoginUsecase(this._repo);
 
   @override
