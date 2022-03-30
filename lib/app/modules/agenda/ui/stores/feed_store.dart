@@ -5,7 +5,7 @@ import 'package:zione/app/modules/core/errors/api_errors.dart';
 import 'package:zione/app/modules/core/errors/failures.dart';
 import 'package:zione/app/modules/agenda/data/mappers/ticket_mapper.dart';
 import 'package:zione/app/modules/agenda/domain/entities/ticket_entity.dart';
-import 'package:zione/app/modules/agenda/domain/usecases/fetch_tickets.dart';
+import 'package:zione/app/modules/agenda/domain/usecases/fetch_tickets_usecase.dart';
 
 part 'feed_store.g.dart';
 

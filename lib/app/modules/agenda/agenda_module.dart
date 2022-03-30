@@ -3,7 +3,7 @@ import 'package:hive/hive.dart';
 import 'package:zione/app/modules/core/settings.dart';
 import 'package:zione/app/modules/agenda/data/datasources/remote/api_datasource.dart';
 import 'package:zione/app/modules/agenda/data/repositories/ticket_repository.dart';
-import 'package:zione/app/modules/agenda/domain/usecases/fetch_tickets.dart';
+import 'package:zione/app/modules/agenda/domain/usecases/fetch_tickets_usecase.dart';
 import 'package:zione/app/modules/agenda/ui/screens/agenda_page.dart';
 import 'package:zione/app/modules/agenda/data/datasources/local/hive_datasouce.dart';
 import 'package:zione/app/modules/agenda/ui/stores/ticket_store.dart';
