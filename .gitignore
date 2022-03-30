@@ -5,6 +5,8 @@ coverage.*
 codecov*
 linux/
 linux/*
+**.g.dart
+*.g.dart
 
 # Miscellaneous
 *.class
