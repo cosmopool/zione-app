@@ -1,5 +1,8 @@
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:hive/hive.dart';
+import 'package:zione/app/modules/agenda/data/repositories/appointment_repository.dart';
+import 'package:zione/app/modules/agenda/domain/usecases/fetch_appointments.dart';
+import 'package:zione/app/modules/agenda/ui/stores/appointment_store.dart';
 import 'package:zione/app/modules/core/settings.dart';
 import 'package:zione/app/modules/agenda/data/datasources/remote/api_datasource.dart';
 import 'package:zione/app/modules/agenda/data/repositories/ticket_repository.dart';
@@ -16,8 +19,11 @@ class AgendaModule extends Module {
     Bind.lazySingleton((i) => ApiServerDataSource(settings: i())),
     Bind.lazySingleton((i) => Settings(Hive.box("settings"))),
     Bind.lazySingleton((i) => TicketRepository(i(), i(), i())),
+    Bind.lazySingleton((i) => AppointmentRepository(i(), i(), i())),
     Bind.lazySingleton((i) => FetchTicketsUsecase(i())),
+    Bind.lazySingleton((i) => FetchAppointmentsUsecase(i())),
     Bind.lazySingleton((i) => TicketStore(i())),
+    Bind.lazySingleton((i) => AppointmentStore(i())),
   ];
 
   @override

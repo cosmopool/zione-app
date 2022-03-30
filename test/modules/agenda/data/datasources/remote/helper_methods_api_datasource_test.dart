@@ -3,11 +3,9 @@ import 'dart:io';
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
-import 'package:zione/app/modules/agenda/data/datasources/remote/api_datasource.dart';
 import 'package:zione/app/modules/core/errors/api_errors.dart';
 import 'package:zione/app/modules/core/errors/failures.dart';
 import 'package:zione/app/modules/core/services/helper_methods.dart';
-import 'package:zione/app/modules/core/utils/constants.dart';
 
 void main() async {
   late ApiHelper<bool> apiHelper;
@@ -67,6 +65,18 @@ void main() async {
       expect(res, ServerSideFailure());
     });
 
+    test('should return AuthTokenError', () async {
+      const message = "AuthTokenError";
+      final Failure res = convertApiMessageToError(message);
+      expect(res, AuthTokenError());
+    });
+
+    test('should return AuthTokenError from detailed message', () async {
+      const message = "Authentication token error: Bad Authorization header. Expected 'Authorization: Bearer<JWT>";
+      final Failure res = convertApiMessageToError(message);
+      expect(res, AuthTokenError());
+    });
+
     test('should return MissingFieldError from detailed message', () async {
       const message = "When any other message appears {'msg': 'Some message from framework or any library'}";
       final Failure res = convertApiMessageToError(message);
@@ -92,6 +102,18 @@ void main() async {
       const body = '{"Status": "Success", "msg": "Every thing ok"}';
       final res = convertApiResponseToBool(http.Response(body, 200));
       expect(res, right(true));
+    });
+
+    test('should return Status even if response has more fields', () async {
+      const body = '{"Status": "Success", "Result": "[1]", "msg": "Every thing ok"}';
+      final res = convertApiResponseToBool(http.Response(body, 200));
+      expect(res, right(true));
+    });
+
+    test('should return AuthTokenError', () async {
+      const body = '{"Status": "Error", "Result": "Authentication token error: Bad Authorization header. Expected \'Authorization: Bearer<JWT>\'", "message": "Bad Authorization header. Expected \'Authorization: Bearer <JWT>\'"}';
+      final res = convertApiResponseToBool(http.Response(body, 200));
+      expect(res, left(AuthTokenError()));
     });
   });
 

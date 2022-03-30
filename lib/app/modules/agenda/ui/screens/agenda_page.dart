@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:zione/app/modules/agenda/ui/widgets/entry_feed/appointment_feed.dart';
 import 'package:zione/app/modules/core/widgets/bottom_navigation_bar_widget.dart';
 import 'package:zione/app/modules/agenda/ui/widgets/entry_feed/ticket_feed.dart';
 
@@ -68,7 +69,7 @@ class _AgendaPageState extends State<AgendaPage>
         controller: _tabController,
         children: const [
           Center(
-            child: TicketsFeed(),
+            child: AppointmentsFeed(),
           ),
           Center(
             child: TicketsFeed(),

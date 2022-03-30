@@ -12,6 +12,9 @@ final log = Logger('ApiHelperMethods');
 /// Convert api response message to [Failure] object
 Failure convertApiMessageToError(String apiError) {
   bool contains(x) => apiError.contains(x);
+  if (contains("AuthTokenError")) return AuthTokenError();
+  if (contains("Authentication token error:")) return AuthTokenError();
+
   if (contains("UnformattedResponse")) return UnformattedResponse();
 
   if (contains("DatabaseError")) return DatabaseError();

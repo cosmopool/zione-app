@@ -1,14 +1,13 @@
 import 'package:dartz/dartz.dart';
 import 'package:logging/logging.dart';
-import 'package:zione/app/modules/core/errors/api_errors.dart';
-import 'package:zione/app/modules/core/errors/cache_errors.dart';
-import 'package:zione/app/modules/core/errors/failures.dart';
-import 'package:zione/app/modules/core/settings.dart';
-import 'package:zione/app/modules/core/utils/enums.dart';
 import 'package:zione/app/modules/agenda/data/datasources/local/i_local_datasource.dart';
 import 'package:zione/app/modules/agenda/data/datasources/remote/i_remote_datasource.dart';
 import 'package:zione/app/modules/agenda/domain/entities/ticket_entity.dart';
 import 'package:zione/app/modules/agenda/domain/repositories/i_ticket_repository.dart';
+import 'package:zione/app/modules/core/errors/api_errors.dart';
+import 'package:zione/app/modules/core/errors/failures.dart';
+import 'package:zione/app/modules/core/settings.dart';
+import 'package:zione/app/modules/core/utils/enums.dart';
 
 class TicketRepository implements ITicketRepository<bool, TicketEntity> {
   final IRemoteDatasource _api;
@@ -128,26 +127,5 @@ class TicketRepository implements ITicketRepository<bool, TicketEntity> {
     // TODO: implement QueueRequestUsecase
     /* await QueueRequestUsecase(postTicketUsecase, tk); */
     return Left(failure);
-  }
-
-  Future<Either<Failure, bool>> validateId(int? id) async {
-    late final List<Map> contentList;
-    late final Failure failure;
-
-    /* final int _id = int.parse(id ?? -1); */
-    final int _id = id ?? -1;
-    final list = await _cache.fetchContent(endpoint);
-    list.fold((l) => failure = l, (r) => contentList = r);
-
-    if (_id < 0) {
-      return left(InvalidValue("{'id': $_id}"));
-    } else if (list.isRight() && _id > -1 && _id >= contentList.length) {
-      return left(EntryNotFound("{'id': $_id}"));
-    } else if (list.isLeft()) {
-      /* return left(EntryNotFound("{'id': $_id}")); */
-      return left(failure);
-    } else {
-      return right(true);
-    }
   }
 }
