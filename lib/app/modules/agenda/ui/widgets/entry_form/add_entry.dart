@@ -252,9 +252,12 @@ class _EntryFormState extends State<EntryForm> {
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
-          const ListTile(
-            title: Text('Adicionar Chamado'),
-            leading: Icon(FontAwesomeIcons.times),
+         ListTile(
+            title: const Text('Adicionar Agendamento e chamado'),
+            leading: IconButton(
+              onPressed: () => Navigator.pop(context),
+              icon: const Icon(FontAwesomeIcons.times),
+            ),
           ),
           _buildDate(),
           _buildTime(),

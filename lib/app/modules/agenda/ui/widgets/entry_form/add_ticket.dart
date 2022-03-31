@@ -57,9 +57,12 @@ class _AddTicketFormState extends State<AddTicketForm> {
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
-          const ListTile(
-            title: Text('Adicionar Chamado'),
-            leading: Icon(FontAwesomeIcons.times),
+         ListTile(
+            title: const Text('Adicionar Chamado'),
+            leading: IconButton(
+              onPressed: () => Navigator.pop(context),
+              icon: const Icon(FontAwesomeIcons.times),
+            ),
           ),
           _buildInput("Nome do Cliente", TextInputType.text, "clientName"),
           _buildInput("Telefone", TextInputType.phone, "clientPhone"),
