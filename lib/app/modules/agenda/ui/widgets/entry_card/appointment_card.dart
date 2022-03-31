@@ -47,7 +47,7 @@ class _AppointmentCardState extends State<AppointmentCard> {
               padding: const EdgeInsets.only(top: 15),
               child: ListTile(
                 title: Text(
-                  widget.appointment.time,
+                  RegExp(r'\d\d:\d\d').stringMatch(widget.appointment.time)!,
                   style: TextStyle(
                     fontSize: _expanded ? 48 : 40,
                     fontWeight: FontWeight.w900,
