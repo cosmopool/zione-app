@@ -1,3 +1,5 @@
+[![codecov](https://codecov.io/gh/cosmopool/zione-app/branch/master/graph/badge.svg?token=OPP05SDPRL)](https://codecov.io/gh/cosmopool/zione-app)
+
 # Zione
 
 :globe_with_meridians: [Português-Brasil](README-BR.md)
