@@ -1,14 +1,15 @@
 import 'package:date_time_picker/date_time_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:logging/logging.dart';
-import 'package:provider/provider.dart';
 import 'package:zione/app/modules/agenda/domain/entities/appointment_entity.dart';
-import 'package:zione/app/modules/agenda/ui/providers/feed_provider.dart';
+import 'package:zione/app/modules/agenda/ui/stores/appointment_store.dart';
 import 'package:zione/app/modules/agenda/ui/widgets/entry_form/components/input_text.dart' as input;
 
 class EditAppointmentForm extends StatefulWidget {
   AppointmentEntity appointment;
+  final store = Modular.get<AppointmentStore>();
 
   EditAppointmentForm({Key? key, required this.appointment}) : super(key: key);
 
@@ -94,7 +95,7 @@ class _EditAppointmentFormState extends State<EditAppointmentForm> {
   void _editAppointment() async {
     log.info("[EDIT][APPOINTMENT][FORM] preparing appointment with new values");
     log.finer("[EDIT][FORM][APPOINTMENT] Appointment to be sent: ${widget.appointment.toMap()}");
-    context.read<FeedProvider>().edit(widget.appointment, widget.appointment.endpoint);
+    widget.store.edit(widget.appointment);
   }
 
   @override

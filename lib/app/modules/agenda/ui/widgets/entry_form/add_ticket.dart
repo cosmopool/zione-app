@@ -1,18 +1,14 @@
-import 'package:logging/logging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:provider/provider.dart';
-
-import 'package:zione/app/modules/agenda/domain/entities/ticket_entity.dart';
-import 'package:zione/app/modules/agenda/ui/providers/feed_provider.dart';
-import 'package:zione/app/modules/core/utils/enums.dart';
+import 'package:logging/logging.dart';
+import 'package:zione/app/modules/agenda/data/mappers/ticket_mapper.dart';
+import 'package:zione/app/modules/agenda/ui/stores/ticket_store.dart';
 
 import 'components/input_text.dart';
 
 class AddTicketForm extends StatefulWidget {
-
-
-  AddTicketForm({Key? key}) : super(key: key);
+  const AddTicketForm({Key? key}) : super(key: key);
 
   @override
   _AddTicketFormState createState() => _AddTicketFormState();
@@ -21,6 +17,7 @@ class AddTicketForm extends StatefulWidget {
 class _AddTicketFormState extends State<AddTicketForm> {
   final log = Logger('AddAddTicketForm');
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final store = Modular.get<TicketStore>();
   Map ticketMap = {};
 
   Widget _buildInput(String label, TextInputType inputType, valueToSave) {
@@ -47,9 +44,9 @@ class _AddTicketFormState extends State<AddTicketForm> {
   void _addTicket() async {
     log.info("[ADD TICKET][FORM] preparing map to instantiate TicketEntity");
     log.fine("[ADD TICKET][FORM] resulting map: $ticketMap");
-    final ticket = TicketEntity.fromMap(ticketMap);
+    final ticket = TicketMapper.fromMap(ticketMap);
     log.fine("[ADD TICKET][FORM] TicketEntity instance to add: $ticket");
-    context.read<FeedProvider>().insert(ticket, Endpoint.tickets);
+    store.insert(ticket);
   }
 
   @override

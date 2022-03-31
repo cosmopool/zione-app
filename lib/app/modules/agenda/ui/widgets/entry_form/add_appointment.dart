@@ -1,11 +1,11 @@
 import 'package:date_time_picker/date_time_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:logging/logging.dart';
-import 'package:provider/provider.dart';
-import 'package:zione/app/modules/agenda/domain/entities/appointment_entity.dart';
+import 'package:zione/app/modules/agenda/data/mappers/appointment_mapper.dart';
 import 'package:zione/app/modules/agenda/domain/entities/ticket_entity.dart';
-import 'package:zione/app/modules/agenda/ui/providers/feed_provider.dart';
+import 'package:zione/app/modules/agenda/ui/stores/appointment_store.dart';
 import 'package:zione/app/modules/agenda/ui/widgets/entry_form/components/input_text.dart' as input;
 
 class AddAppointmentForm extends StatefulWidget {
@@ -20,6 +20,7 @@ class AddAppointmentForm extends StatefulWidget {
 class _AddAppointmentFormState extends State<AddAppointmentForm> {
   final log = Logger('AddAppointmentForm');
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final store = Modular.get<AppointmentStore>();
 
   String? _date;
   String? _time;
@@ -121,8 +122,8 @@ class _AddAppointmentFormState extends State<AddAppointmentForm> {
     };
     log.finer("[ADD][FORM][APPOINTMENT] Appointment to be sent: $appointmentMap");
 
-    final appointment = AppointmentEntity(appointmentMap);
-    context.read<FeedProvider>().insert(appointment, appointment.endpoint);
+    final appointment = AppointmentMapper.fromMap(appointmentMap);
+    store.insert(appointment);
   }
 
   @override

@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:zione/app/modules/agenda/ui/widgets/bottom_modal/bottom_modal.dart';
 import 'package:zione/app/modules/agenda/ui/widgets/entry_feed/appointment_feed.dart';
+import 'package:zione/app/modules/agenda/ui/widgets/entry_form/add_entry.dart';
+import 'package:zione/app/modules/agenda/ui/widgets/entry_form/add_ticket.dart';
 import 'package:zione/app/modules/core/widgets/bottom_navigation_bar_widget.dart';
 import 'package:zione/app/modules/agenda/ui/widgets/entry_feed/ticket_feed.dart';
 
@@ -14,7 +17,6 @@ class AgendaPage extends StatefulWidget {
 class _AgendaPageState extends State<AgendaPage>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
-  /* final controller = Modular.get<FeedStore>(); */
 
   @override
   void initState() {
@@ -38,16 +40,16 @@ class _AgendaPageState extends State<AgendaPage>
   Widget build(BuildContext context) {
     return Scaffold(
       bottomNavigationBar: const BottomNavigationBarCustom(),
-      /* floatingActionButton: FloatingActionButton.extended( */
-        /* onPressed: () => showBottomAutoSizeModal( */
-        /*   context, */
-        /*   (_tabController.index == 0) ? EntryForm() : AddTicketForm(), */
-        /* ), */
-      /*   label: (_tabController.index == 0) */
-      /*       ? const Text('Agendamento') */
-      /*       : const Text('Chamado'), */
-      /*   icon: const Icon(FontAwesomeIcons.plus), */
-      /* ), */
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () => showBottomAutoSizeModal(
+          context,
+          (_tabController.index == 0) ? EntryForm() : const AddTicketForm(),
+        ),
+        label: (_tabController.index == 0)
+            ? const Text('Agendamento')
+            : const Text('Chamado'),
+        icon: const Icon(FontAwesomeIcons.plus),
+      ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       appBar: AppBar(
         title: const Text('Agenda'),

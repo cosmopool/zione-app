@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:zione/app/modules/agenda/domain/entities/ticket_entity.dart';
+import 'package:zione/app/modules/agenda/ui/widgets/bottom_modal/bottom_modal.dart';
 import 'package:zione/app/modules/agenda/ui/widgets/entry_card/components/divider_theme.dart';
+import 'package:zione/app/modules/agenda/ui/widgets/entry_card/components/ticket_card_menu.dart';
 import 'package:zione/app/modules/agenda/ui/widgets/entry_card/components/url_launcher.dart' as launcher;
 
 
@@ -39,14 +41,14 @@ class _TicketCardState extends State<TicketCard> {
                     fontWeight: FontWeight.w900,
                   ),
                 ),
-                /* trailing: _expanded */
-                /*     ? IconButton( */
-                /*         icon: const Icon(FontAwesomeIcons.ellipsisV), */
-                /*         // onPressed: () => {}, */
-                /*         /* onPressed: () => showBottomAutoSizeModal( */ */
-                /*         /*     context, CardMenu(widget.ticket, Endpoint.tickets)), */ */
-                /*       ) */
-                /*     : null, */
+                trailing: _expanded
+                    ? IconButton(
+                        icon: const Icon(FontAwesomeIcons.ellipsisV),
+                        // onPressed: () => {},
+                        onPressed: () => showBottomAutoSizeModal(
+                            context, TicketCardMenu(ticket: widget.ticket)),
+                      )
+                    : null,
                 onTap: () {
                   setState(() {
                     _expanded = !_expanded;

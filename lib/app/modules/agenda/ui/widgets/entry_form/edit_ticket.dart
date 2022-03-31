@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:logging/logging.dart';
-import 'package:provider/provider.dart';
 import 'package:zione/app/modules/agenda/domain/entities/ticket_entity.dart';
-import 'package:zione/app/modules/agenda/ui/providers/feed_provider.dart';
-import 'package:zione/app/modules/core/utils/enums.dart';
+import 'package:zione/app/modules/agenda/ui/stores/ticket_store.dart';
 import 'package:zione/app/modules/agenda/ui/widgets/entry_form/components/input_text.dart' as input;
-
-import 'components/input_text.dart';
 
 class EditTicketForm extends StatefulWidget {
   TicketEntity ticket;
@@ -21,6 +18,7 @@ class EditTicketForm extends StatefulWidget {
 class _EditTicketFormState extends State<EditTicketForm> {
   final log = Logger('EditTicketForm');
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final store = Modular.get<TicketStore>();
 
   Widget _buildClientName() {
     const textType = TextInputType.text;
@@ -152,7 +150,7 @@ class _EditTicketFormState extends State<EditTicketForm> {
   void _editTicket() async {
     log.info("[EDIT TICKET][FORM] preparing ticket with new values");
     log.finer("[EDIT TICKET][FORM] Ticket to be sent: ${widget.ticket.toMap()}");
-    context.read<FeedProvider>().edit(widget.ticket, Endpoint.tickets);
+    store.edit(widget.ticket);
   }
 
   @override

@@ -1,15 +1,26 @@
 import 'package:date_time_picker/date_time_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:provider/provider.dart';
-import 'package:zione/app/modules/agenda/domain/entities/agenda_entry_entity.dart';
-import 'package:zione/app/modules/agenda/ui/providers/feed_provider.dart';
-import 'package:zione/app/modules/core/utils/enums.dart';
+import 'package:logging/logging.dart';
+import 'package:zione/app/modules/agenda/domain/entities/agenda_entity.dart';
+import 'package:zione/app/modules/agenda/ui/stores/agenda_store.dart';
 
 import 'components/input_text.dart';
 // import 'package:zione_app/repositories/entry_repository.dart';
 
 class EntryForm extends StatefulWidget {
+  const EntryForm({Key? key}) : super(key: key);
+
+  @override
+  _EntryFormState createState() => _EntryFormState();
+}
+
+class _EntryFormState extends State<EntryForm> {
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final log = Logger('AddEntryForm');
+  final store = Modular.get<AgendaStore>();
+
   late String _clientName;
   late String _clientPhone;
   late String _clientAddress;
@@ -18,14 +29,6 @@ class EntryForm extends StatefulWidget {
   late String _date;
   late String _time;
   late String _duration;
-
-  @override
-  _EntryFormState createState() => _EntryFormState();
-}
-
-class _EntryFormState extends State<EntryForm> {
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  // var _clientName;
 
   Widget _buildClientName() {
     const textType = TextInputType.text;
@@ -43,7 +46,7 @@ class _EntryFormState extends State<EntryForm> {
         },
         onSaved: (value) {
           if (value != null) {
-            widget._clientName = value;
+            _clientName = value;
           }
         },
       ),
@@ -66,7 +69,7 @@ class _EntryFormState extends State<EntryForm> {
         },
         onSaved: (value) {
           if (value != null) {
-            widget._clientPhone = value;
+            _clientPhone = value;
           }
         },
       ),
@@ -89,7 +92,7 @@ class _EntryFormState extends State<EntryForm> {
         },
         onSaved: (value) {
           if (value != null) {
-            widget._clientAddress = value;
+            _clientAddress = value;
           }
         },
       ),
@@ -112,7 +115,7 @@ class _EntryFormState extends State<EntryForm> {
         },
         onSaved: (value) {
           if (value != null) {
-            widget._serviceType = value;
+            _serviceType = value;
           }
         },
       ),
@@ -132,7 +135,7 @@ class _EntryFormState extends State<EntryForm> {
         },
         onSaved: (value) {
           if (value != null) {
-            widget._description = value;
+            _description = value;
           }
         },
       ),
@@ -150,7 +153,7 @@ class _EntryFormState extends State<EntryForm> {
         lastDate: DateTime(2030),
         icon: const Icon(Icons.event),
         decoration: customInputDecoration('Data'),
-        onChanged: (val) => widget._date = val.toString(),
+        onChanged: (val) => _date = val.toString(),
         validator: (e) {
           if (e == null) {
             return 'Selecione uma data';
@@ -160,7 +163,7 @@ class _EntryFormState extends State<EntryForm> {
           if (value != null) {
             final dateTime = value.toString().split(" ");
             final date = dateTime[0];
-            widget._date = date;
+            _date = date;
           }
         },
       ),
@@ -174,7 +177,7 @@ class _EntryFormState extends State<EntryForm> {
         decoration: customInputDecoration('Horário'),
         type: DateTimePickerType.time,
         dateLabelText: 'Horário',
-        onChanged: (val) => widget._time = val.toString(),
+        onChanged: (val) => _time = val.toString(),
         validator: (e) {
           if (e == null) {
             return 'Selecione um horário';
@@ -188,8 +191,8 @@ class _EntryFormState extends State<EntryForm> {
             final hour = time[0];
             final minute = time[1];
             final val = "$hour:$minute";
-            widget._time = val;
-            // widget._time = dateTime;
+            _time = val;
+            // _time = dateTime;
           }
         },
       ),
@@ -203,44 +206,42 @@ class _EntryFormState extends State<EntryForm> {
         decoration: customInputDecoration('Duração'),
         type: DateTimePickerType.time,
         dateLabelText: 'Duração',
-        onChanged: (val) => widget._duration = val.toString(),
+        onChanged: (val) => _duration = val.toString(),
         validator: (e) {
           if (e == null) {
             return 'Selecione a duração';
           }
         },
-       onSaved: (value) {
-         if (value != null) {
-           final dateTime = value.toString().split(" ");
-           final time = dateTime[0].split(":");
+        onSaved: (value) {
+          if (value != null) {
+            final dateTime = value.toString().split(" ");
+            final time = dateTime[0].split(":");
 
-           final hour = time[0];
-           final minute = time[1];
-           final val = "$hour:$minute";
-           widget._duration = val;
-         }
-       },
+            final hour = time[0];
+            final minute = time[1];
+            final val = "$hour:$minute";
+            _duration = val;
+          }
+        },
       ),
     );
   }
 
   void _addEntry() async {
-    Map<String, String?> agendaEntry = {
-      'date': widget._date,
-      'time': widget._time,
-      'duration': widget._duration,
-      'clientName': widget._clientName,
-      'clientPhone': widget._clientPhone,
-      'clientAddress': widget._clientAddress,
-      // 'clientAddressStreet': widget._clientAddressStreet,
-      // 'clientAddressNumber': widget._clientAddressNumber,
-      // 'clientAddressCity': widget._clientAddressCity,
-      // 'clientAddressRegion': widget._clientAddressRegion,
-      'serviceType': widget._serviceType,
-      'description': widget._description,
-    };
+    log.info("[ADD][FORM][APPOINTMENT] preparing agenda entity intance...");
+    final entry = AgendaEntity(
+      date: _date,
+      time: _time,
+      duration: _duration,
+      clientName: _clientName,
+      clientPhone: _clientPhone,
+      clientAddress: _clientAddress,
+      serviceType: _serviceType,
+      description: _description,
+    );
+    log.finer("[ADD][FORM][APPOINTMENT] entry to be sent: $entry");
 
-    context.read<FeedProvider>().insert(AgendaEntryEntity.fromMap(agendaEntry), Endpoint.tickets );
+    store.insert(entry);
   }
 
   @override
