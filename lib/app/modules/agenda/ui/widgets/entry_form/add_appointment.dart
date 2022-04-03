@@ -25,7 +25,6 @@ class _AddAppointmentFormState extends State<AddAppointmentForm> {
   String? _date;
   String? _time;
   String? _duration;
-  String? _isFinished;
 
   Widget _buildDate() {
     return Padding(
@@ -46,7 +45,7 @@ class _AddAppointmentFormState extends State<AddAppointmentForm> {
         },
         onSaved: (value) {
           if (value != null) {
-            final dateTime = value.toString().split(" ");
+            final dateTime = value.split(" ");
             final date = dateTime[0];
             _date = date;
           }
@@ -138,7 +137,7 @@ class _AddAppointmentFormState extends State<AddAppointmentForm> {
             title: const Text('Adicionar Agendamento'),
             leading: IconButton(
               onPressed: () => Navigator.pop(context),
-              icon: const Icon(FontAwesomeIcons.times),
+              icon: const Icon(FontAwesomeIcons.xmark),
             ),
           ),
           _buildDate(),

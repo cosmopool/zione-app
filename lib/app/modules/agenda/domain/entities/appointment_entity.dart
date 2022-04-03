@@ -5,6 +5,7 @@ class AppointmentEntity extends Equatable {
   late int _id;
   late String date;
   late String time;
+  DateTime dateTime = DateTime(2022, 01, 01, 0, 0);
   late String duration;
   late int ticketId;
   late bool isFinished;
@@ -14,23 +15,29 @@ class AppointmentEntity extends Equatable {
     required this.date,
     required this.time,
     required this.duration,
+    dateTime,
     this.ticketId = -1,
     this.isFinished = false,
-  }) : _id = id;
+  }) : _id = id, dateTime = dateTime ?? DateTime.now();
 
   int get id => _id;
 
   Endpoint get endpoint => Endpoint.appointments;
 
   /// Returns a [Map] of the entity.
-  Map<String, dynamic> toMap() => {
-        "id": id,
-        "date": date,
-        "time": time,
-        "duration": duration,
-        "ticketId": ticketId,
-        "isFinished": isFinished,
-      };
+  Map<String, dynamic> toMap() {
+    final dt = dateTime;
+    return {
+      "id": _id,
+      "date": "${dt.year}-${dt.month}-${dt.day}",
+      "time": "${dt.hour}:${dt.minute}",
+      /* "date": date, */
+      /* "time": time, */
+      "duration": duration,
+      "ticketId": ticketId,
+      "isFinished": isFinished,
+    };
+  }
 
 
   /// A way to edit a appointment with a given map
@@ -46,5 +53,5 @@ class AppointmentEntity extends Equatable {
   }
 
   @override
-  List<Object?> get props => [_id, date, time, duration, ticketId, isFinished];
+  List<Object?> get props => [_id, dateTime, date, time, duration, ticketId, isFinished];
 }

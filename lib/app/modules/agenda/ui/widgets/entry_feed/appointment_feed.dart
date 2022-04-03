@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_triple/flutter_triple.dart';
+import 'package:timelines/timelines.dart';
 import 'package:zione/app/modules/agenda/domain/entities/appointment_entity.dart';
 import 'package:zione/app/modules/agenda/ui/stores/appointment_store.dart';
 import 'package:zione/app/modules/agenda/ui/stores/ticket_store.dart';
@@ -29,13 +30,36 @@ class _AppointmentsFeedState extends State<AppointmentsFeed> {
     return ScopedBuilder(
         store: store,
         onState: (context, List<AppointmentEntity> state) {
-          return ListView.builder(
-            itemCount: state.length,
-            itemBuilder: (context, index) {
-              final appointment = state[index];
-              final ticket = tkStore.getTicketById(appointment.ticketId);
-              return AppointmentCard(appointment: appointment, ticket: ticket,);
-            },
+          return Timeline.tileBuilder(
+            padding: const EdgeInsets.only(left: 15),
+            theme: TimelineThemeData(nodePosition: 0.0, indicatorPosition: .3),
+            builder: TimelineTileBuilder.connected(
+              itemCount: state.length,
+              contentsBuilder: (context, index) {
+                final appointment = state[index];
+                final ticket = tkStore.getTicketById(appointment.ticketId);
+                return AppointmentCard(
+                  appointment: appointment,
+                  ticket: ticket,
+                );
+              },
+              indicatorBuilder: (_, index) {
+                final ap = state[index];
+                if (ap.dateTime.isBefore(DateTime.now())) {
+                  return const DotIndicator(color: Color(0xFFC4C4C4));
+                } else {
+                  return const DotIndicator(color: Color(0xFF0B0B26));
+                }
+              },
+              connectorBuilder: (_, index, __) {
+                final ap = state[index];
+                if (ap.dateTime.isBefore(DateTime.now())) {
+                  return const SolidLineConnector(color: Color(0xFFC4C4C4));
+                } else {
+                  return const SolidLineConnector(color: Color(0xFF0B0B26));
+                }
+              },
+            ),
           );
         },
         onError: (context, error) => Text(error.toString()),

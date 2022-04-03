@@ -51,12 +51,12 @@ void main() {
     expect(toMap, nicoEntry);
   });
 
-  /* test('Should edit (override) all given fields', () { */
-  /*   final AppointmentEntity entry = AppointmentEntity.fromMap(nicoEntry); */
-  /*   entry.edit(nicoEntryEditedMulti); */
-  /**/
-  /*   expect(entry.toMap(), AppointmentEntity.fromMap(nicoEntryEditedMulti).toMap()); */
-  /* }); */
+  test('should return a datetime object in appoinment property', () {
+    /* "date": "2021-01-12", */
+    /* "time": "08:00", */
+    final entry = AppointmentMapper.fromMap(nicoEntry);
+    expect(entry.dateTime, DateTime(2021, 01, 12, 08, 00));
+  });
 
   /* test('Should edit (override) only given fields', () { */
   /*   final AppointmentEntity entry = AppointmentEntity.fromMap(nicoEntry); */

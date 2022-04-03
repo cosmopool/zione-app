@@ -79,6 +79,7 @@ class ApiServerDataSource implements IRemoteDatasource {
     return apiHelper.handleRequestErrors(() async {
       final url = uriMethod(await settings.host, "/${endpoint.name}");
       log.info("[API][POST] Trying to post on server: $url");
+      log.info("[API][POST] content $content");
 
       final http.Response response = await httpPost(
         url,
@@ -135,7 +136,8 @@ class ApiServerDataSource implements IRemoteDatasource {
       Endpoint endpoint, Map content) async {
     return apiHelper.handleRequestErrors(() async {
       final url = uriMethod(await settings.host, "/${endpoint.name}/${content['id']}");
-      log.info("[API][PATCH] Trying to delete on server: $url");
+      log.info("[API][DELETE] Trying to delete on server: $url");
+      log.info("[API][DELETE] content $content");
 
       final http.Response response = await httpDelete(
         url,

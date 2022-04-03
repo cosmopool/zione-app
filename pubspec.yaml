@@ -12,7 +12,7 @@ dependencies:
   http: ^0.13.4
   equatable: ^2.0.3
   url_launcher: ^6.0.18
-  font_awesome_flutter: ^9.2.0
+  font_awesome_flutter: ^10.1.0
   hive: ^2.0.5
   hive_flutter: ^1.1.0
   modal_bottom_sheet: ^2.0.0
@@ -24,6 +24,7 @@ dependencies:
   flutter_modular: ^4.5.0
   triple: ^1.5.0+1
   flutter_triple: ^1.2.7+2
+  timelines: ^0.1.0
 
 dev_dependencies:
   flutter_test:
