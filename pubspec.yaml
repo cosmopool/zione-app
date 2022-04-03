@@ -24,7 +24,9 @@ dependencies:
   flutter_modular: ^4.5.0
   triple: ^1.5.0+1
   flutter_triple: ^1.2.7+2
+  table_calendar: ^3.0.5
   timelines: ^0.1.0
+  flex_color_scheme: ^4.2.0
 
 dev_dependencies:
   flutter_test:

@@ -12,13 +12,13 @@ import 'package:zione/app/modules/agenda/domain/usecases/fetch_appointments.dart
 import 'package:zione/app/modules/agenda/domain/usecases/insert_agenda_entry_usecase.dart';
 import 'package:zione/app/modules/agenda/domain/usecases/insert_appointment_usecase.dart';
 import 'package:zione/app/modules/agenda/domain/usecases/insert_ticket_usecase.dart';
+import 'package:zione/app/modules/agenda/ui/screens/main_page.dart';
 import 'package:zione/app/modules/agenda/ui/stores/agenda_store.dart';
 import 'package:zione/app/modules/agenda/ui/stores/appointment_store.dart';
 import 'package:zione/app/modules/core/settings.dart';
 import 'package:zione/app/modules/agenda/data/datasources/remote/api_datasource.dart';
 import 'package:zione/app/modules/agenda/data/repositories/ticket_repository.dart';
 import 'package:zione/app/modules/agenda/domain/usecases/fetch_tickets_usecase.dart';
-import 'package:zione/app/modules/agenda/ui/screens/agenda_page.dart';
 import 'package:zione/app/modules/agenda/data/datasources/local/hive_datasouce.dart';
 import 'package:zione/app/modules/agenda/ui/stores/ticket_store.dart';
 
@@ -55,6 +55,8 @@ class AgendaModule extends Module {
 
   @override
   List<ModularRoute> get routes => [
-        ChildRoute('/', child: (context, args) => const AgendaPage()),
+        ChildRoute('/', child: (context, args) => MainPage()),
+        ChildRoute('/agenda', child: (context, args) => MainPage(screenIndex: 0)),
+        ChildRoute('/tickets', child: (context, args) => MainPage(screenIndex: 1)),
       ];
 }

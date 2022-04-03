@@ -165,7 +165,7 @@ class _EditTicketFormState extends State<EditTicketForm> {
             title: const Text('Editar Chamado'),
             leading: IconButton(
               onPressed: () => Navigator.pop(context),
-              icon: const Icon(FontAwesomeIcons.times),
+              icon: const Icon(FontAwesomeIcons.xmark),
             ),
           ),
           _buildClientName(),
@@ -177,24 +177,26 @@ class _EditTicketFormState extends State<EditTicketForm> {
             crossAxisAlignment: CrossAxisAlignment.end,
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              TextButton(
-                  style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all(Colors.green),
-                    foregroundColor: MaterialStateProperty.all(Colors.white),
-                    fixedSize: MaterialStateProperty.all(const Size(130, 40)),
-                  ),
-                  onPressed: () {
-                    final currentState = _formKey.currentState;
-                    if (currentState != null) {
-                      final isValid = currentState.validate();
-                      if (isValid) {
-                        currentState.save();
-                        _editTicket();
-                        Navigator.pop(context, true);
-                      }
+              ElevatedButton(
+                style: ButtonStyle(
+                  fixedSize: MaterialStateProperty.all(const Size(130, 40)),
+                ),
+                onPressed: () {
+                  final currentState = _formKey.currentState;
+                  if (currentState != null) {
+                    final isValid = currentState.validate();
+                    if (isValid) {
+                      currentState.save();
+                      _editTicket();
+                      Navigator.pop(context, true);
                     }
-                  },
-                  child: const Text('Salvar'))
+                  }
+                },
+                child: Text(
+                  'Salvar',
+                  style: Theme.of(context).primaryTextTheme.titleMedium,
+                ),
+              )
             ],
           )
         ],

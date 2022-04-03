@@ -6,7 +6,8 @@ import 'package:logging/logging.dart';
 import 'package:zione/app/modules/agenda/data/mappers/appointment_mapper.dart';
 import 'package:zione/app/modules/agenda/domain/entities/ticket_entity.dart';
 import 'package:zione/app/modules/agenda/ui/stores/appointment_store.dart';
-import 'package:zione/app/modules/agenda/ui/widgets/entry_form/components/input_text.dart' as input;
+import 'package:zione/app/modules/agenda/ui/widgets/entry_form/components/input_text.dart'
+    as input;
 
 class AddAppointmentForm extends StatefulWidget {
   TicketEntity ticket;
@@ -96,30 +97,32 @@ class _AddAppointmentFormState extends State<AddAppointmentForm> {
             return 'Selecione a duração';
           }
         },
-       onSaved: (value) {
-         if (value != null) {
-           final dateTime = value.toString().split(" ");
-           final time = dateTime[0].split(":");
+        onSaved: (value) {
+          if (value != null) {
+            final dateTime = value.toString().split(" ");
+            final time = dateTime[0].split(":");
 
-           final hour = time[0];
-           final minute = time[1];
-           final val = "$hour:$minute";
-           _duration = val;
-         }
-       },
+            final hour = time[0];
+            final minute = time[1];
+            final val = "$hour:$minute";
+            _duration = val;
+          }
+        },
       ),
     );
   }
 
   void _editAppointment() async {
-    log.info("[ADD][FORM][APPOINTMENT] preparing map to instantiate AppointmentEntity");
+    log.info(
+        "[ADD][FORM][APPOINTMENT] preparing map to instantiate AppointmentEntity");
     final Map<String, dynamic> appointmentMap = {
       'date': _date,
       'time': _time,
       'duration': _duration,
       'ticketId': widget.ticket.id,
     };
-    log.finer("[ADD][FORM][APPOINTMENT] Appointment to be sent: $appointmentMap");
+    log.finer(
+        "[ADD][FORM][APPOINTMENT] Appointment to be sent: $appointmentMap");
 
     final appointment = AppointmentMapper.fromMap(appointmentMap);
     store.insert(appointment);
@@ -133,7 +136,7 @@ class _AddAppointmentFormState extends State<AddAppointmentForm> {
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
-         ListTile(
+          ListTile(
             title: const Text('Adicionar Agendamento'),
             leading: IconButton(
               onPressed: () => Navigator.pop(context),
@@ -148,24 +151,26 @@ class _AddAppointmentFormState extends State<AddAppointmentForm> {
             crossAxisAlignment: CrossAxisAlignment.end,
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              TextButton(
-                  style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all(Colors.green),
-                    foregroundColor: MaterialStateProperty.all(Colors.white),
-                    fixedSize: MaterialStateProperty.all(const Size(130, 40)),
-                  ),
-                  onPressed: () {
-                    final currentState = _formKey.currentState;
-                    if (currentState != null) {
-                      final isValid = currentState.validate();
-                      if (isValid) {
-                        currentState.save();
-                        _editAppointment();
-                        Navigator.pop(context, true);
-                      }
+              ElevatedButton(
+                style: ButtonStyle(
+                  fixedSize: MaterialStateProperty.all(const Size(130, 40)),
+                ),
+                onPressed: () {
+                  final currentState = _formKey.currentState;
+                  if (currentState != null) {
+                    final isValid = currentState.validate();
+                    if (isValid) {
+                      currentState.save();
+                      _editAppointment();
+                      Navigator.pop(context, true);
                     }
-                  },
-                  child: const Text('Salvar'))
+                  }
+                },
+                child: Text(
+                  'Salvar',
+                  style: Theme.of(context).primaryTextTheme.titleMedium,
+                ),
+              )
             ],
           )
         ],

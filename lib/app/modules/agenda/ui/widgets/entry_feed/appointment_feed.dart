@@ -46,17 +46,19 @@ class _AppointmentsFeedState extends State<AppointmentsFeed> {
               indicatorBuilder: (_, index) {
                 final ap = state[index];
                 if (ap.dateTime.isBefore(DateTime.now())) {
-                  return const DotIndicator(color: Color(0xFFC4C4C4));
+                  return DotIndicator(color: Theme.of(context).disabledColor);
+                  /* return DotIndicator(color: Theme.of(context).colorScheme.onPrimary); */
                 } else {
-                  return const DotIndicator(color: Color(0xFF0B0B26));
+                  return DotIndicator(color: Theme.of(context).colorScheme.primary);
+                  /* return const DotIndicator(color: Color(0xFF0B0B26)); */
                 }
               },
               connectorBuilder: (_, index, __) {
                 final ap = state[index];
                 if (ap.dateTime.isBefore(DateTime.now())) {
-                  return const SolidLineConnector(color: Color(0xFFC4C4C4));
+                  return SolidLineConnector(color: Theme.of(context).disabledColor);
                 } else {
-                  return const SolidLineConnector(color: Color(0xFF0B0B26));
+                  return SolidLineConnector(color: Theme.of(context).colorScheme.primary);
                 }
               },
             ),

@@ -23,7 +23,6 @@ class _BottomNavigationBarCustomState extends State<BottomNavigationBarCustom> {
   @override
   Widget build(BuildContext context) {
     return BottomNavigationBar(
-      unselectedItemColor: Colors.grey[600],
       currentIndex: _selectedScreenIndex,
       items: const <BottomNavigationBarItem>[
         BottomNavigationBarItem(
