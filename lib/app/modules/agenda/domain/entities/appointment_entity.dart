@@ -26,11 +26,11 @@ class AppointmentEntity extends Equatable {
 
   /// Returns a [Map] of the entity.
   Map<String, dynamic> toMap() {
-    final dt = dateTime;
+    final dt = dateTime.toString().split(" ");
     return {
       "id": _id,
-      "date": "${dt.year}-${dt.month}-${dt.day}",
-      "time": "${dt.hour}:${dt.minute}",
+      "date": dt[0],
+      "time": "${RegExp(r'\d\d:\d\d').stringMatch(dt[1])}",
       /* "date": date, */
       /* "time": time, */
       "duration": duration,

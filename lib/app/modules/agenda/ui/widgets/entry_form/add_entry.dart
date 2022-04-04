@@ -185,14 +185,7 @@ class _EntryFormState extends State<EntryForm> {
         },
         onSaved: (value) {
           if (value != null) {
-            final dateTime = value.toString().split(" ");
-            final time = dateTime[0].split(":");
-
-            final hour = time[0];
-            final minute = time[1];
-            final val = "$hour:$minute";
-            _time = val;
-            // _time = dateTime;
+            _time = value;
           }
         },
       ),
@@ -214,13 +207,7 @@ class _EntryFormState extends State<EntryForm> {
         },
         onSaved: (value) {
           if (value != null) {
-            final dateTime = value.toString().split(" ");
-            final time = dateTime[0].split(":");
-
-            final hour = time[0];
-            final minute = time[1];
-            final val = "$hour:$minute";
-            _duration = val;
+            _duration = value;
           }
         },
       ),

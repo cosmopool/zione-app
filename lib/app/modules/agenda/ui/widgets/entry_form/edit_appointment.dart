@@ -37,8 +37,8 @@ class _EditAppointmentFormState extends State<EditAppointmentForm> {
         onSaved: (value) {
           if (value != null) {
             final dateTime = value.toString().split(" ");
-            final date = dateTime[0];
-            widget.appointment.date = date;
+            widget.appointment.date = dateTime[0];
+            widget.appointment.dateTime = DateTime.parse(value);
           }
         },
       ),
@@ -56,13 +56,7 @@ class _EditAppointmentFormState extends State<EditAppointmentForm> {
         onChanged: (val) => widget.appointment.time = val.toString(),
         onSaved: (value) {
           if (value != null) {
-            final dateTime = value.toString().split(" ");
-            final time = dateTime[0].split(":");
-
-            final hour = time[0];
-            final minute = time[1];
-            final val = "$hour:$minute";
-            widget.appointment.time = val;
+            widget.appointment.time = value;
           }
         },
       ),
@@ -79,13 +73,7 @@ class _EditAppointmentFormState extends State<EditAppointmentForm> {
         onChanged: (val) => widget.appointment.duration = val.toString(),
        onSaved: (value) {
          if (value != null) {
-           final dateTime = value.toString().split(" ");
-           final time = dateTime[0].split(":");
-
-           final hour = time[0];
-           final minute = time[1];
-           final val = "$hour:$minute";
-           widget.appointment.duration = val;
+           widget.appointment.duration = value;
          }
        },
       ),
