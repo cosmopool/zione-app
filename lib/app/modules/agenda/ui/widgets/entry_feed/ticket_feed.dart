@@ -23,8 +23,9 @@ class _TicketsFeedState extends State<TicketsFeed> {
 
   @override
   Widget build(BuildContext context) {
-
-    return ScopedBuilder(
+    return RefreshIndicator(
+      onRefresh: () => store.fetch(),
+      child: ScopedBuilder(
         store: store,
         onState: (context, List<TicketEntity> state) {
           return ListView.builder(
@@ -35,6 +36,10 @@ class _TicketsFeedState extends State<TicketsFeed> {
           );
         },
         onError: (context, error) => Text(error.toString()),
-        onLoading: (context) => const CircularProgressIndicator());
+        onLoading: (context) => const Center(
+          child: CircularProgressIndicator(),
+        ),
+      ),
+    );
   }
 }

@@ -1,4 +1,4 @@
-List<Map<String, dynamic>> appointmentListStub = [
+List<Map<String, dynamic>> agendaListStub = [
   {
     "id": 2,
     "date": "2022-03-30",

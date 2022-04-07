@@ -5,7 +5,8 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:logging/logging.dart';
 import 'package:zione/app/modules/agenda/domain/entities/appointment_entity.dart';
 import 'package:zione/app/modules/agenda/ui/stores/appointment_store.dart';
-import 'package:zione/app/modules/agenda/ui/widgets/entry_form/components/input_text.dart' as input;
+import 'package:zione/app/modules/agenda/ui/widgets/entry_form/components/input_text.dart'
+    as input;
 
 class EditAppointmentForm extends StatefulWidget {
   AppointmentEntity appointment;
@@ -28,7 +29,7 @@ class _EditAppointmentFormState extends State<EditAppointmentForm> {
         initialDate: DateTime.parse(widget.appointment.date),
         type: DateTimePickerType.date,
         dateMask: 'dd/MM/yyyy',
-        initialValue: DateTime.now().toString(),
+        initialValue: widget.appointment.date,
         firstDate: DateTime(2022),
         lastDate: DateTime(2030),
         icon: const Icon(Icons.event),
@@ -36,9 +37,7 @@ class _EditAppointmentFormState extends State<EditAppointmentForm> {
         onChanged: (val) => widget.appointment.date = val.toString(),
         onSaved: (value) {
           if (value != null) {
-            final dateTime = value.toString().split(" ");
-            widget.appointment.date = dateTime[0];
-            widget.appointment.dateTime = DateTime.parse(value);
+            widget.appointment.date = value;
           }
         },
       ),
@@ -49,7 +48,7 @@ class _EditAppointmentFormState extends State<EditAppointmentForm> {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 7.5),
       child: DateTimePicker(
-        /* initialDate: DateTime.parse(widget.appointment.time), */
+        initialValue: widget.appointment.time,
         decoration: input.customInputDecoration('Horário'),
         type: DateTimePickerType.time,
         dateLabelText: 'Horário',
@@ -67,22 +66,24 @@ class _EditAppointmentFormState extends State<EditAppointmentForm> {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 7.5),
       child: DateTimePicker(
+        initialValue: widget.appointment.duration,
         decoration: input.customInputDecoration('Duração'),
         type: DateTimePickerType.time,
         dateLabelText: 'Duração',
         onChanged: (val) => widget.appointment.duration = val.toString(),
-       onSaved: (value) {
-         if (value != null) {
-           widget.appointment.duration = value;
-         }
-       },
+        onSaved: (value) {
+          if (value != null) {
+            widget.appointment.duration = value;
+          }
+        },
       ),
     );
   }
 
   void _editAppointment() async {
     log.info("[EDIT][APPOINTMENT][FORM] preparing appointment with new values");
-    log.finer("[EDIT][FORM][APPOINTMENT] Appointment to be sent: ${widget.appointment.toMap()}");
+    log.finer(
+        "[EDIT][FORM][APPOINTMENT] Appointment to be sent: ${widget.appointment.toMap()}");
     widget.store.edit(widget.appointment);
   }
 
@@ -94,7 +95,7 @@ class _EditAppointmentFormState extends State<EditAppointmentForm> {
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
-         ListTile(
+          ListTile(
             title: const Text('Editar Agendamento'),
             leading: IconButton(
               onPressed: () => Navigator.pop(context),

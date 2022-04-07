@@ -46,6 +46,7 @@ void main() {
     "duration": "00:30",
     "isFinished": false
   };
+
   test('Id field should be not null, when given valid input', () {
     final entry = AppointmentEntity(
         date: "2021-01-25",
@@ -94,5 +95,62 @@ void main() {
     entry.edit(toEdit);
 
     expect(entry.id, 1);
+  });
+
+  test('Should parse date', () {
+    final entry = AppointmentEntity(date: "2021-01-25", time: "10:00", duration: "01:00");
+
+    expect(entry.date, "2021-01-25");
+  });
+
+  test('Should set a new date', () {
+    final entry = AppointmentEntity(date: "2021-01-25", time: "10:00", duration: "01:00");
+    entry.date = "2021-01-01";
+
+    expect(entry.date, "2021-01-01");
+  });
+
+  test('Should parse time', () {
+    final entry = AppointmentEntity(date: "2021-01-25", time: "10:00", duration: "01:00");
+
+    expect(entry.time, "10:00");
+  });
+
+  test('Should set a new time', () {
+    final entry = AppointmentEntity(date: "2021-01-25", time: "10:00", duration: "01:00");
+    entry.time = "05:00";
+
+    expect(entry.time, "05:00");
+  });
+
+  test('Should set duration to 1 hour', () {
+    final entry = AppointmentEntity(date: "2021-01-25", time: "10:00", duration: "01:00");
+
+    expect(entry.duration, "01:00");
+  });
+
+  test('Should set duration to 2 hour', () {
+    final entry = AppointmentEntity(date: "2021-01-25", time: "10:00", duration: "01:00");
+    entry.duration = "02:00";
+
+    expect(entry.duration, "02:00");
+  });
+
+  test('final time should be 11:00h', () {
+    final entry = AppointmentEntity(date: "2021-01-25", time: "10:00", duration: "01:00");
+
+    expect(entry.finalTime, "11:00");
+  });
+
+  test('Should return true if appointment date is before than DateTime.now())', () {
+    final entry = AppointmentEntity(date: "2021-01-25", time: "10:00", duration: "01:00");
+
+    expect(entry.hasPassed, true);
+  });
+
+  test('Should return false if appointment date is after than DateTime.now())', () {
+    final entry = AppointmentEntity(date: "2100-01-25", time: "10:00", duration: "01:00");
+
+    expect(entry.hasPassed, false);
   });
 }

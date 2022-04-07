@@ -12,9 +12,12 @@ import 'package:zione/app/modules/agenda/domain/usecases/fetch_appointments.dart
 import 'package:zione/app/modules/agenda/domain/usecases/insert_agenda_entry_usecase.dart';
 import 'package:zione/app/modules/agenda/domain/usecases/insert_appointment_usecase.dart';
 import 'package:zione/app/modules/agenda/domain/usecases/insert_ticket_usecase.dart';
+import 'package:zione/app/modules/agenda/ui/screens/agenda_page.dart';
 import 'package:zione/app/modules/agenda/ui/screens/main_page.dart';
+import 'package:zione/app/modules/agenda/ui/screens/ticket_page.dart';
 import 'package:zione/app/modules/agenda/ui/stores/agenda_store.dart';
 import 'package:zione/app/modules/agenda/ui/stores/appointment_store.dart';
+import 'package:zione/app/modules/agenda/ui/stores/feed_store.dart';
 import 'package:zione/app/modules/core/settings.dart';
 import 'package:zione/app/modules/agenda/data/datasources/remote/api_datasource.dart';
 import 'package:zione/app/modules/agenda/data/repositories/ticket_repository.dart';
@@ -51,12 +54,15 @@ class AgendaModule extends Module {
         Bind.lazySingleton((i) => TicketStore(i(), i(), i(), i(), i())),
         Bind.lazySingleton((i) => AppointmentStore(i(), i(), i(), i(), i())),
         Bind.lazySingleton((i) => AgendaStore(i(), i())),
+        Bind.lazySingleton((i) => FeedStore()),
       ];
 
   @override
   List<ModularRoute> get routes => [
-        ChildRoute('/', child: (context, args) => MainPage()),
-        ChildRoute('/agenda', child: (context, args) => MainPage(screenIndex: 0)),
-        ChildRoute('/tickets', child: (context, args) => MainPage(screenIndex: 1)),
+        ChildRoute('/', child: (context, args) => const MainPage(), children: [
+        ChildRoute('/agenda', child: (context, args) => const AgendaPage(), transition: TransitionType.rightToLeftWithFade),
+        ChildRoute('/tickets', child: (context, args) => const TicketsPage(), transition: TransitionType.rightToLeftWithFade),
+          ],
+        ),
       ];
 }

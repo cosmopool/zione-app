@@ -34,89 +34,106 @@ class _AppointmentCardState extends State<AppointmentCard> {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-      shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(borderRadius))),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.only(top: 15),
-            child: ListTile(
-              title: Text(
-                RegExp(r'\d\d:\d\d').stringMatch(widget.appointment.time)!,
-                style: TextStyle(
-                  fontSize: _expanded ? 48 : 40,
-                  fontWeight: FontWeight.w900,
+    final appointment = widget.appointment;
+
+    return Opacity(
+      opacity: (appointment.hasPassed && _expanded == false) ? 0.5 : 1,
+      child: Card(
+        margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(borderRadius))),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.only(top: 15),
+              child: ListTile(
+                title: Row(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Text(
+                      appointment.time,
+                      style: TextStyle(
+                        fontSize: _expanded ? 58 : 50,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 10, bottom: 10),
+                      child: Text(
+                        '~ ${appointment.finalTime}',
+                        style: Theme.of(context).textTheme.headline6!.copyWith(
+                            color: Theme.of(context).disabledColor,
+                            fontWeight: FontWeight.w400),
+                      ),
+                    ),
+                  ],
+                ),
+                trailing: _expanded
+                    ? IconButton(
+                        icon: const Icon(FontAwesomeIcons.ellipsisVertical),
+                        onPressed: () => showBottomAutoSizeModal(
+                            context,
+                            AppointmentCardMenu(
+                              appointment: appointment,
+                            )),
+                      )
+                    : null,
+                onTap: () {
+                  setState(() {
+                    _expanded = !_expanded;
+                  });
+                },
+              ),
+            ),
+            Visibility(
+              visible: !_expanded,
+              child: Padding(
+                padding: const EdgeInsets.only(bottom: 20),
+                child: Column(
+                  children: [
+                    ListTile(
+                      title: Text(widget.ticket.clientAddress),
+                      subtitle: Text(widget.ticket.serviceType),
+                    ),
+                  ],
                 ),
               ),
-              trailing: _expanded
-                  ? IconButton(
-                      icon: const Icon(FontAwesomeIcons.ellipsisVertical),
-                      onPressed: () => showBottomAutoSizeModal(
-                          context,
-                          AppointmentCardMenu(
-                            appointment: widget.appointment,
-                          )),
-                    )
-                  : null,
-              onTap: () {
-                setState(() {
-                  _expanded = !_expanded;
-                });
-              },
             ),
-          ),
-          Visibility(
-            visible: !_expanded,
-            child: Padding(
-              padding: const EdgeInsets.only(bottom: 20),
+            Visibility(
+              visible: _expanded,
               child: Column(
                 children: [
+                  dividerTheme(),
+                  ListTile(
+                    title: Text(widget.ticket.clientName),
+                    subtitle: Text(widget.ticket.serviceType),
+                    trailing: IconButton(
+                        onPressed: () =>
+                            launcher.phone(widget.ticket.clientPhone),
+                        icon: const Icon(FontAwesomeIcons.phone)),
+                  ),
+                  dividerTheme(),
                   ListTile(
                     title: Text(widget.ticket.clientAddress),
-                    subtitle: Text(widget.ticket.serviceType),
+                    subtitle: Text(widget.ticket.clientAddress),
+                    trailing: IconButton(
+                        onPressed: () =>
+                            launcher.maps(widget.ticket.clientAddress),
+                        icon: const Icon(FontAwesomeIcons.locationDot)),
+                  ),
+                  dividerTheme(),
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 20),
+                    child: ListTile(
+                      title: Text(widget.ticket.description),
+                    ),
                   ),
                 ],
               ),
             ),
-          ),
-          Visibility(
-            visible: _expanded,
-            child: Column(
-              children: [
-                dividerTheme(),
-                ListTile(
-                  title: Text(widget.ticket.clientName),
-                  subtitle: Text(widget.ticket.serviceType),
-                  // trailing: const Icon(FontAwesomeIcons.phone),
-                  trailing: IconButton(
-                      onPressed: () =>
-                          launcher.phone(widget.ticket.clientPhone),
-                      icon: const Icon(FontAwesomeIcons.phone)),
-                ),
-                dividerTheme(),
-                ListTile(
-                  title: Text(widget.ticket.clientAddress),
-                  subtitle: Text(widget.ticket.clientAddress),
-                  // trailing: const Icon(Icons.location_on),
-                  trailing: IconButton(
-                      onPressed: () =>
-                          launcher.maps(widget.ticket.clientAddress),
-                      icon: const Icon(FontAwesomeIcons.locationDot)),
-                ),
-                dividerTheme(),
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 20),
-                  child: ListTile(
-                    title: Text(widget.ticket.description),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

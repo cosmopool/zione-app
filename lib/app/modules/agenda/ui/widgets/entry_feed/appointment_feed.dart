@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_triple/flutter_triple.dart';
-import 'package:timelines/timelines.dart';
 import 'package:zione/app/modules/agenda/domain/entities/appointment_entity.dart';
 import 'package:zione/app/modules/agenda/ui/stores/appointment_store.dart';
+import 'package:zione/app/modules/agenda/ui/stores/feed_store.dart';
 import 'package:zione/app/modules/agenda/ui/stores/ticket_store.dart';
-import 'package:zione/app/modules/agenda/ui/widgets/entry_card/appointment_card.dart';
+import 'package:zione/app/modules/agenda/ui/widgets/entry_feed/component/date_flag.dart';
+import 'package:zione/app/modules/agenda/ui/widgets/entry_feed/component/timeline.dart';
+import 'package:zione/app/modules/core/extensions/datetime_extension.dart';
 
 class AppointmentsFeed extends StatefulWidget {
   const AppointmentsFeed({Key? key}) : super(key: key);
@@ -17,6 +19,7 @@ class AppointmentsFeed extends StatefulWidget {
 class _AppointmentsFeedState extends State<AppointmentsFeed> {
   final store = Modular.get<AppointmentStore>();
   final tkStore = Modular.get<TicketStore>();
+  final feed = Modular.get<FeedStore>();
 
   @override
   void initState() {
@@ -27,44 +30,29 @@ class _AppointmentsFeedState extends State<AppointmentsFeed> {
 
   @override
   Widget build(BuildContext context) {
-    return ScopedBuilder(
+    return RefreshIndicator(
+      onRefresh: () => store.fetch(),
+      child: ScopedBuilder(
         store: store,
         onState: (context, List<AppointmentEntity> state) {
-          return Timeline.tileBuilder(
-            padding: const EdgeInsets.only(left: 15),
-            theme: TimelineThemeData(nodePosition: 0.0, indicatorPosition: .3),
-            builder: TimelineTileBuilder.connected(
-              itemCount: state.length,
-              contentsBuilder: (context, index) {
-                final appointment = state[index];
-                final ticket = tkStore.getTicketById(appointment.ticketId);
-                return AppointmentCard(
-                  appointment: appointment,
-                  ticket: ticket,
-                );
-              },
-              indicatorBuilder: (_, index) {
-                final ap = state[index];
-                if (ap.dateTime.isBefore(DateTime.now())) {
-                  return DotIndicator(color: Theme.of(context).disabledColor);
-                  /* return DotIndicator(color: Theme.of(context).colorScheme.onPrimary); */
-                } else {
-                  return DotIndicator(color: Theme.of(context).colorScheme.primary);
-                  /* return const DotIndicator(color: Color(0xFF0B0B26)); */
-                }
-              },
-              connectorBuilder: (_, index, __) {
-                final ap = state[index];
-                if (ap.dateTime.isBefore(DateTime.now())) {
-                  return SolidLineConnector(color: Theme.of(context).disabledColor);
-                } else {
-                  return SolidLineConnector(color: Theme.of(context).colorScheme.primary);
-                }
-              },
-            ),
+          final appointmentsByDate = store.byDate(state);
+          appointmentsByDate.forEach(
+            (key, value) => value.sort((a, b) => a.time.compareTo(b.time)),
+          );
+          return Column(
+            children: [
+              DateFlag(),
+              AppointmentTimeline(
+                appointmentList: appointmentsByDate[feed.dateToShow.dateOnly] ?? [],
+              )
+            ],
           );
         },
         onError: (context, error) => Text(error.toString()),
-        onLoading: (context) => const CircularProgressIndicator());
+        onLoading: (context) => const Center(
+          child: CircularProgressIndicator(),
+        ),
+      ),
+    );
   }
 }

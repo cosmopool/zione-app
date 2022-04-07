@@ -24,15 +24,12 @@ class AppointmentMapper {
         isFinished: json["isFinished"] ?? false,
       );
 
-  static Map toMap(AppointmentEntity entity) {
-    final dt = entity.dateTime;
-    return {
-      "id": entity.id,
-      "date": "${dt.year}/${dt.month}/${dt.day}",
-      "time": "${dt.hour}:${dt.minute}",
-      "duration": entity.duration,
-      "ticketId": entity.ticketId,
-      "isFinished": entity.isFinished,
-    };
-  }
+  static Map toMap(AppointmentEntity entity) => {
+        "id": entity.id,
+        "date": entity.date,
+        "time": entity.time,
+        "duration": entity.duration,
+        "ticketId": entity.ticketId,
+        "isFinished": entity.isFinished,
+      };
 }

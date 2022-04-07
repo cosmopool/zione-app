@@ -10,6 +10,7 @@ import 'package:zione/app/modules/agenda/domain/usecases/fetch_appointments.dart
 import 'package:zione/app/modules/agenda/domain/usecases/insert_appointment_usecase.dart';
 import 'package:zione/app/modules/core/errors/api_errors.dart';
 import 'package:zione/app/modules/core/errors/failures.dart';
+import 'package:zione/app/modules/core/extensions/datetime_extension.dart';
 
 class AppointmentStore extends NotifierStore<Failure, List<AppointmentEntity>> {
   final FetchAppointmentsUsecase fetchUsecase;
@@ -26,6 +27,18 @@ class AppointmentStore extends NotifierStore<Failure, List<AppointmentEntity>> {
     this.closeUsecase,
     this.editUsecase,
   ) : super([]);
+
+  Map<String, List<AppointmentEntity>> byDate(List<AppointmentEntity> list) {
+    final Map<String, List<AppointmentEntity>> mapByDate = {};
+
+    for (var ap in list) {
+      mapByDate[ap.date] == null ? mapByDate[ap.date] = [ap] : mapByDate[ap.date]!.add(ap);
+    }
+
+    if (mapByDate[DateTime.now().dateOnly] == null) mapByDate[DateTime.now().dateOnly] = [];
+
+    return mapByDate;
+  }
 
   Future<void> fetch() async {
     log.info("[APPOINTMENT][STORE] -- FETCHING APPOINTMENTS...");
